@@ -1,0 +1,1609 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AbsenInput {
+  lat: Float!
+  lng: Float!
+}
+
+type AbsenSync {
+  createdAt: DateTime!
+  date: String!
+  id: ID!
+  lat: String!
+  lng: String!
+  type: String!
+  updatedAt: DateTime!
+  user_id: String!
+  users(
+    """Specify to filter the records returned."""
+    filter: userSyncFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [userSyncSort!]! = []
+  ): [userSync!]
+}
+
+type AbsenSyncAggregateGroupBy {
+  createdAt: DateTime
+  date: String
+  id: ID
+  lat: String
+  lng: String
+  type: String
+  updatedAt: DateTime
+  user_id: String
+}
+
+type AbsenSyncCountAggregate {
+  createdAt: Int
+  date: Int
+  id: Int
+  lat: Int
+  lng: Int
+  type: Int
+  updatedAt: Int
+  user_id: Int
+}
+
+type AbsenSyncMaxAggregate {
+  createdAt: DateTime
+  date: String
+  id: ID
+  lat: String
+  lng: String
+  type: String
+  updatedAt: DateTime
+  user_id: String
+}
+
+type AbsenSyncMinAggregate {
+  createdAt: DateTime
+  date: String
+  id: ID
+  lat: String
+  lng: String
+  type: String
+  updatedAt: DateTime
+  user_id: String
+}
+
+type AttendanceResponse {
+  allow: Boolean!
+  message: String!
+}
+
+union AttendanceResult = AttendanceResponse | Error
+
+type AuthUserResponse {
+  token: String!
+  user: userSync!
+}
+
+input CitySync {
+  active: Boolean!
+  name: String!
+  province_id: String!
+}
+
+type CitySyncConnection {
+  """Array of nodes."""
+  nodes: [citySync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type CitySyncDeleteResponse {
+  active: Boolean
+  id: ID
+  name: String
+}
+
+input CreateOneCitySyncInput {
+  """The record to create"""
+  citySync: CitySync!
+}
+
+input CreateOneDistrictSyncInput {
+  """The record to create"""
+  districtSync: DistrictSync!
+}
+
+input CreateOneMenuInput {
+  """The record to create"""
+  menu: Menu!
+}
+
+input CreateOneProvinceSyncInput {
+  """The record to create"""
+  provinceSync: ProvinceSync!
+}
+
+input CreateOneSubdistrictSyncInput {
+  """The record to create"""
+  subdistrictSync: SubdistrictSync!
+}
+
+input CreateOneTransactionclinicianInput {
+  """The record to create"""
+  transactionclinician: RolePermission!
+}
+
+union CreatePDFResult = Error | InvalidInputError | PdfResponse
+
+input DateFieldComparison {
+  between: DateFieldComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  is: Boolean
+  isNot: Boolean
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+  notBetween: DateFieldComparisonBetween
+  notIn: [DateTime!]
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DeleteOneCitySyncInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneDistrictSyncInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneMenuInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneProvinceSyncInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneSubdistrictSyncInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteOneTransactionclinicianInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DistrictSync {
+  active: Boolean!
+  city_id: Int!
+  name: String!
+  no_kab: String
+  no_kec: String
+  no_prop: String
+}
+
+type DistrictSyncConnection {
+  """Array of nodes."""
+  nodes: [districtSync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type DistrictSyncDeleteResponse {
+  active: Boolean
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_prop: String
+}
+
+type Error implements ErrorResponse {
+  message: String!
+}
+
+interface ErrorResponse {
+  message: String!
+}
+
+enum GenderType {
+  L
+  P
+}
+
+input GenderTypeFilterComparison {
+  eq: GenderType
+  gt: GenderType
+  gte: GenderType
+  iLike: GenderType
+  in: [GenderType!]
+  is: Boolean
+  isNot: Boolean
+  like: GenderType
+  lt: GenderType
+  lte: GenderType
+  neq: GenderType
+  notILike: GenderType
+  notIn: [GenderType!]
+  notLike: GenderType
+}
+
+union GetRefreshTokenResult = AuthUserResponse | Error
+
+input IDFilterComparison {
+  eq: ID
+  gt: ID
+  gte: ID
+  iLike: ID
+  in: [ID!]
+  is: Boolean
+  isNot: Boolean
+  like: ID
+  lt: ID
+  lte: ID
+  neq: ID
+  notILike: ID
+  notIn: [ID!]
+  notLike: ID
+}
+
+"""
+An Image File, format includes .jpg, .jpeg & .png. maximum filesize is 2MB
+"""
+scalar ImageFile
+
+type InputError {
+  field: String!
+  messages: [String!]!
+}
+
+input InputRefreshToken {
+  token: String!
+}
+
+type InvalidInputError implements ErrorResponse {
+  errors: [InputError!]!
+  message: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+union LoginUserResult = AuthUserResponse | Error
+
+input Menu {
+  fieldname: String
+  icon: String
+  menu_id: String
+  name: String!
+  type: String
+  url: String
+}
+
+type MenuConnection {
+  """Array of nodes."""
+  nodes: [menu!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type MenuDeleteResponse {
+  fieldname: String
+  icon: String
+  id: ID
+  menu_id: String
+  name: String
+  type: String
+  url: String
+}
+
+type Mutation {
+  citySyncCreate(input: CreateOneCitySyncInput!): citySync!
+  citySyncDelete(input: DeleteOneCitySyncInput!): CitySyncDeleteResponse!
+  citySyncUpdate(input: UpdateOneCitySyncInput!): citySync!
+  createAbsen(file: Upload!, input: AbsenInput!): [AttendanceResult!]!
+  createPDF: [CreatePDFResult!]!
+  districtSyncCreate(input: CreateOneDistrictSyncInput!): districtSync!
+  districtSyncDelete(input: DeleteOneDistrictSyncInput!): DistrictSyncDeleteResponse!
+  districtSyncUpdate(input: UpdateOneDistrictSyncInput!): districtSync!
+  login(input: LoginInput!): [LoginUserResult!]!
+  menuCreate(input: CreateOneMenuInput!): menu!
+  menuDelete(input: DeleteOneMenuInput!): MenuDeleteResponse!
+  menuUpdate(input: UpdateOneMenuInput!): menu!
+  provinceSyncCreate(input: CreateOneProvinceSyncInput!): provinceSync!
+  provinceSyncDelete(input: DeleteOneProvinceSyncInput!): ProvinceSyncDeleteResponse!
+  provinceSyncUpdate(input: UpdateOneProvinceSyncInput!): provinceSync!
+  refreshToken(input: InputRefreshToken!): [RefreshTokenResult!]!
+  register(file: Upload!, input: RegisterInput!): [RegisterUserResult!]!
+  rolePermisionCreate(input: CreateOneTransactionclinicianInput!): transactionclinician!
+  rolePermisionDelete(input: DeleteOneTransactionclinicianInput!): TransactionclinicianDeleteResponse!
+  rolePermisionUpdate(input: UpdateOneTransactionclinicianInput!): transactionclinician!
+  subdistrictSyncCreate(input: CreateOneSubdistrictSyncInput!): subdistrictSync!
+  subdistrictSyncDelete(input: DeleteOneSubdistrictSyncInput!): SubdistrictSyncDeleteResponse!
+  subdistrictSyncUpdate(input: UpdateOneSubdistrictSyncInput!): subdistrictSync!
+  updateProfile(id: ID, input: UpdateProfileInput!, profilePhoto: ImageFile): [UpdateProfileResult!]!
+  updateSetting(background: ImageFile, id: String!, input: SettingSync!, logo: ImageFile): ResponseSetting!
+}
+
+type OffsetPageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+}
+
+input OffsetPaging {
+  """Limit the number of records returned"""
+  limit: Int
+
+  """Offset to start returning records from"""
+  offset: Int
+}
+
+input PagingInput {
+  """max 50"""
+  limit: Int! = 10
+  offset: Int
+}
+
+type PdfResponse {
+  id: ID!
+  path: String!
+  path_without_domain: String!
+}
+
+type Profile {
+  address: String
+  createdAt: DateTime!
+  dateOfBirth: DateTime
+  fullname: String
+  gender: GenderType
+  id: ID!
+  nip: String
+  phone: String
+  placeOfBirth: String
+  profilePhoto: String
+  profilePhotoUrl: String
+  updatedAt: DateTime!
+  user: userSync!
+}
+
+type ProfileAggregateGroupBy {
+  address: String
+  dateOfBirth: DateTime
+  fullname: String
+  gender: GenderType
+  id: ID
+  nip: String
+  phone: String
+  placeOfBirth: String
+  profilePhoto: String
+  profilePhotoUrl: String
+  user_id: String
+}
+
+type ProfileConnection {
+  """Array of nodes."""
+  nodes: [Profile!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+}
+
+type ProfileCountAggregate {
+  address: Int
+  dateOfBirth: Int
+  fullname: Int
+  gender: Int
+  id: Int
+  nip: Int
+  phone: Int
+  placeOfBirth: Int
+  profilePhoto: Int
+  profilePhotoUrl: Int
+  user_id: Int
+}
+
+input ProfileFilter {
+  address: StringFieldComparison
+  and: [ProfileFilter!]
+  dateOfBirth: DateFieldComparison
+  fullname: StringFieldComparison
+  gender: GenderTypeFilterComparison
+  id: IDFilterComparison
+  nip: StringFieldComparison
+  or: [ProfileFilter!]
+  phone: StringFieldComparison
+  placeOfBirth: StringFieldComparison
+  profilePhoto: StringFieldComparison
+  profilePhotoUrl: StringFieldComparison
+  user: ProfileFilteruserSyncFilter
+  user_id: StringFieldComparison
+}
+
+input ProfileFilteruserSyncFilter {
+  and: [ProfileFilteruserSyncFilter!]
+  email: StringFieldComparison
+  id: IDFilterComparison
+  or: [ProfileFilteruserSyncFilter!]
+  role_id: StringFieldComparison
+  username: StringFieldComparison
+}
+
+type ProfileMaxAggregate {
+  address: String
+  dateOfBirth: DateTime
+  fullname: String
+  gender: GenderType
+  id: ID
+  nip: String
+  phone: String
+  placeOfBirth: String
+  profilePhoto: String
+  profilePhotoUrl: String
+  user_id: String
+}
+
+type ProfileMinAggregate {
+  address: String
+  dateOfBirth: DateTime
+  fullname: String
+  gender: GenderType
+  id: ID
+  nip: String
+  phone: String
+  placeOfBirth: String
+  profilePhoto: String
+  profilePhotoUrl: String
+  user_id: String
+}
+
+input ProfileSort {
+  direction: SortDirection!
+  field: ProfileSortFields!
+  nulls: SortNulls
+}
+
+enum ProfileSortFields {
+  address
+  dateOfBirth
+  fullname
+  gender
+  id
+  nip
+  phone
+  placeOfBirth
+  profilePhoto
+  profilePhotoUrl
+  user_id
+}
+
+input ProvinceSync {
+  active: Boolean!
+  id: String!
+  name: String!
+}
+
+type ProvinceSyncConnection {
+  """Array of nodes."""
+  nodes: [provinceSync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type ProvinceSyncDeleteResponse {
+  active: Boolean
+  id: ID
+  name: String
+}
+
+type Query {
+  absen(
+    """The id of the record to find."""
+    id: ID!
+  ): AbsenSync
+  citySync(
+    """The id of the record to find."""
+    id: ID!
+  ): citySync
+  citySyncs(
+    """Specify to filter the records returned."""
+    filter: citySyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [citySyncSort!]! = []
+  ): CitySyncConnection!
+  districtSync(
+    """The id of the record to find."""
+    id: ID!
+  ): districtSync
+  districtSyncs(
+    """Specify to filter the records returned."""
+    filter: districtSyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [districtSyncSort!]! = []
+  ): DistrictSyncConnection!
+  getRefreshToken(token: String!): [GetRefreshTokenResult!]!
+  getUserData(filter: UserDetailTableFilter, paging: PagingInput, sorting: [TrDataUserSorting!]!): ResultDetailUserDTO!
+  me: userSync!
+  menu(
+    """The id of the record to find."""
+    id: ID!
+  ): menu
+  menus(
+    """Specify to filter the records returned."""
+    filter: menuFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [menuSort!]! = []
+  ): MenuConnection!
+  profile(
+    """The id of the record to find."""
+    id: ID!
+  ): Profile
+  profiles(
+    """Specify to filter the records returned."""
+    filter: ProfileFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [ProfileSort!]! = []
+  ): ProfileConnection!
+  provinceSync(
+    """The id of the record to find."""
+    id: ID!
+  ): provinceSync
+  provinceSyncs(
+    """Specify to filter the records returned."""
+    filter: provinceSyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [provinceSyncSort!]! = []
+  ): ProvinceSyncConnection!
+  role(
+    """The id of the record to find."""
+    id: ID!
+  ): roleSync
+  rolePermision(
+    """The id of the record to find."""
+    id: ID!
+  ): transactionclinician
+  rolePermisions(
+    """Specify to filter the records returned."""
+    filter: transactionclinicianFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [transactionclinicianSort!]! = []
+  ): TransactionclinicianConnection!
+  roles(
+    """Specify to filter the records returned."""
+    filter: roleSyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [roleSyncSort!]! = []
+  ): RoleSyncConnection!
+  subdistrictSync(
+    """The id of the record to find."""
+    id: ID!
+  ): subdistrictSync
+  subdistrictSyncs(
+    """Specify to filter the records returned."""
+    filter: subdistrictSyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [subdistrictSyncSort!]! = []
+  ): SubdistrictSyncConnection!
+  user(
+    """The id of the record to find."""
+    id: ID!
+  ): userSync
+  users(
+    """Specify to filter the records returned."""
+    filter: userSyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [userSyncSort!]! = []
+  ): UserSyncConnection!
+}
+
+type RefreshTokenResponse {
+  token: String!
+}
+
+union RefreshTokenResult = Error | RefreshTokenResponse
+
+input RegisterInput {
+  email: String!
+  fullname: String
+  password: String!
+  username: String
+}
+
+union RegisterUserResult = AuthUserResponse | Error | InvalidInputError
+
+type ResponseSetting {
+  message: String!
+  node: settingSync!
+}
+
+type ResultDetailUserDTO {
+  nodes: [userDetailDTO!]
+  totalCount: Int!
+}
+
+input RolePermission {
+  menu_id: String
+  role_id: String!
+}
+
+type RoleSyncConnection {
+  """Array of nodes."""
+  nodes: [roleSync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+input SettingSync {
+  alamat: String
+  background: String
+  city_id: String
+  district_id: String
+  email: String
+  jamMasuk: String
+  jamPulang: String
+  kodePos: String
+  latitude: String
+  logoSekolah: String
+  longitude: String
+  namaSekolah: String!
+  npsn: String
+  periode: String
+  province_id: String
+  radius: String
+  subdistrict_id: String
+  telepon: String
+  website: String
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input StringFieldComparison {
+  eq: String
+  gt: String
+  gte: String
+  iLike: String
+  in: [String!]
+  is: Boolean
+  isNot: Boolean
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  notILike: String
+  notIn: [String!]
+  notLike: String
+}
+
+input SubdistrictSync {
+  active: Boolean!
+  district_id: Int!
+  name: String!
+  no_kab: String
+  no_kec: String
+  no_kel: String
+  no_prop: String
+}
+
+type SubdistrictSyncConnection {
+  """Array of nodes."""
+  nodes: [subdistrictSync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type SubdistrictSyncDeleteResponse {
+  active: Boolean
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_kel: String
+  no_prop: String
+}
+
+input TrDataUserSorting {
+  """opts: `ASC` || `DESC`"""
+  direction: String
+
+  """opts: `id`"""
+  field: String!
+}
+
+type TransactionclinicianConnection {
+  """Array of nodes."""
+  nodes: [transactionclinician!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type TransactionclinicianDeleteResponse {
+  id: ID
+  menu_id: String
+  role_id: String
+}
+
+input UpdateOneCitySyncInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: CitySync!
+}
+
+input UpdateOneDistrictSyncInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: DistrictSync!
+}
+
+input UpdateOneMenuInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: Menu!
+}
+
+input UpdateOneProvinceSyncInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: ProvinceSync!
+}
+
+input UpdateOneSubdistrictSyncInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: SubdistrictSync!
+}
+
+input UpdateOneTransactionclinicianInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: RolePermission!
+}
+
+input UpdateProfileInput {
+  address: String
+  dateOfBirth: DateTime
+  fullname: String
+  gender: GenderType
+  nip: String
+  phone: String
+  placeOfBirth: String
+}
+
+union UpdateProfileResult = Error | InvalidInputError | Profile
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UserDetailTableFilter {
+  and: [UserDetailTableFilter!]
+
+  """use `iLike` filter'"""
+  email: iLikeFilter
+
+  """use `iLike` filter'"""
+  fullname: iLikeFilter
+  or: [UserDetailTableFilter!]
+
+  """use `iLike` filter'"""
+  username: iLikeFilter
+}
+
+type UserSyncConnection {
+  """Array of nodes."""
+  nodes: [userSync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+}
+
+type citySync {
+  active: Boolean!
+  id: ID!
+  name: String!
+  province: provinceSync
+}
+
+type citySyncAggregateGroupBy {
+  id: ID
+  name: String
+}
+
+type citySyncCountAggregate {
+  id: Int
+  name: Int
+}
+
+input citySyncFilter {
+  and: [citySyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [citySyncFilter!]
+  province: citySyncFilterprovinceSyncFilter
+}
+
+input citySyncFilterprovinceSyncFilter {
+  and: [citySyncFilterprovinceSyncFilter!]
+  id: IDFilterComparison
+  or: [citySyncFilterprovinceSyncFilter!]
+}
+
+type citySyncMaxAggregate {
+  id: ID
+  name: String
+}
+
+type citySyncMinAggregate {
+  id: ID
+  name: String
+}
+
+input citySyncSort {
+  direction: SortDirection!
+  field: citySyncSortFields!
+  nulls: SortNulls
+}
+
+enum citySyncSortFields {
+  id
+  name
+}
+
+type districtSync {
+  active: Boolean!
+  city: citySync
+  id: ID!
+  name: String!
+  no_kab: String
+  no_kec: String
+  no_prop: String
+}
+
+type districtSyncAggregateGroupBy {
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_prop: String
+}
+
+type districtSyncCountAggregate {
+  id: Int
+  name: Int
+  no_kab: Int
+  no_kec: Int
+  no_prop: Int
+}
+
+input districtSyncFilter {
+  and: [districtSyncFilter!]
+  city: districtSyncFiltercitySyncFilter
+  id: IDFilterComparison
+  name: StringFieldComparison
+  no_kab: StringFieldComparison
+  no_kec: StringFieldComparison
+  no_prop: StringFieldComparison
+  or: [districtSyncFilter!]
+}
+
+input districtSyncFiltercitySyncFilter {
+  and: [districtSyncFiltercitySyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [districtSyncFiltercitySyncFilter!]
+}
+
+type districtSyncMaxAggregate {
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_prop: String
+}
+
+type districtSyncMinAggregate {
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_prop: String
+}
+
+input districtSyncSort {
+  direction: SortDirection!
+  field: districtSyncSortFields!
+  nulls: SortNulls
+}
+
+enum districtSyncSortFields {
+  id
+  name
+  no_kab
+  no_kec
+  no_prop
+}
+
+input iLikeFilter {
+  iLike: String
+}
+
+type menu {
+  children(
+    """Specify to filter the records returned."""
+    filter: menuFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [menuSort!]! = []
+  ): [menu!]!
+  fieldname: String
+  icon: String
+  id: ID!
+  menu_id: String
+  name: String
+  type: String
+  url: String
+}
+
+type menuAggregateGroupBy {
+  fieldname: String
+  id: ID
+  menu_id: String
+  name: String
+  type: String
+  url: String
+}
+
+type menuCountAggregate {
+  fieldname: Int
+  id: Int
+  menu_id: Int
+  name: Int
+  type: Int
+  url: Int
+}
+
+input menuFilter {
+  and: [menuFilter!]
+  fieldname: StringFieldComparison
+  id: IDFilterComparison
+  menu_id: StringFieldComparison
+  name: StringFieldComparison
+  or: [menuFilter!]
+  type: StringFieldComparison
+  url: StringFieldComparison
+}
+
+type menuMaxAggregate {
+  fieldname: String
+  id: ID
+  menu_id: String
+  name: String
+  type: String
+  url: String
+}
+
+type menuMinAggregate {
+  fieldname: String
+  id: ID
+  menu_id: String
+  name: String
+  type: String
+  url: String
+}
+
+input menuSort {
+  direction: SortDirection!
+  field: menuSortFields!
+  nulls: SortNulls
+}
+
+enum menuSortFields {
+  fieldname
+  id
+  menu_id
+  name
+  type
+  url
+}
+
+type provinceSync {
+  active: Boolean!
+  id: ID!
+  name: String!
+}
+
+type provinceSyncAggregateGroupBy {
+  id: ID
+}
+
+type provinceSyncCountAggregate {
+  id: Int
+}
+
+input provinceSyncFilter {
+  and: [provinceSyncFilter!]
+  id: IDFilterComparison
+  or: [provinceSyncFilter!]
+}
+
+type provinceSyncMaxAggregate {
+  id: ID
+}
+
+type provinceSyncMinAggregate {
+  id: ID
+}
+
+input provinceSyncSort {
+  direction: SortDirection!
+  field: provinceSyncSortFields!
+  nulls: SortNulls
+}
+
+enum provinceSyncSortFields {
+  id
+}
+
+type roleSync {
+  desc: String
+  id: ID!
+  name: String!
+}
+
+type roleSyncAggregateGroupBy {
+  id: ID
+  name: String
+}
+
+type roleSyncCountAggregate {
+  id: Int
+  name: Int
+}
+
+input roleSyncFilter {
+  and: [roleSyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [roleSyncFilter!]
+}
+
+type roleSyncMaxAggregate {
+  id: ID
+  name: String
+}
+
+type roleSyncMinAggregate {
+  id: ID
+  name: String
+}
+
+input roleSyncSort {
+  direction: SortDirection!
+  field: roleSyncSortFields!
+  nulls: SortNulls
+}
+
+enum roleSyncSortFields {
+  id
+  name
+}
+
+type settingSync {
+  alamat: String
+  background: String
+  cities(
+    """Specify to filter the records returned."""
+    filter: citySyncFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [citySyncSort!]! = []
+  ): [citySync!]
+  city_id: String
+  createdAt: DateTime!
+  district_id: String
+  districts(
+    """Specify to filter the records returned."""
+    filter: districtSyncFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [districtSyncSort!]! = []
+  ): [districtSync!]
+  email: String
+  id: ID!
+  isActive: Boolean!
+  jamMasuk: String
+  jamPulang: String
+  kodePos: String
+  latitude: String
+  logoSekolah: String
+  longitude: String
+  namaSekolah: String!
+  npsn: String
+  periode: String
+  province_id: String
+  provinces(
+    """Specify to filter the records returned."""
+    filter: provinceSyncFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [provinceSyncSort!]! = []
+  ): [provinceSync!]
+  radius: String
+  subdistrict_id: String
+  subdistricts(
+    """Specify to filter the records returned."""
+    filter: subdistrictSyncFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [subdistrictSyncSort!]! = []
+  ): [subdistrictSync!]
+  telepon: String
+  updatedAt: DateTime!
+  website: String
+}
+
+type settingSyncAggregateGroupBy {
+  alamat: String
+  background: String
+  city_id: String
+  createdAt: DateTime
+  district_id: String
+  email: String
+  id: ID
+  jamMasuk: String
+  jamPulang: String
+  kodePos: String
+  latitude: String
+  logoSekolah: String
+  longitude: String
+  namaSekolah: String
+  npsn: String
+  periode: String
+  province_id: String
+  radius: String
+  subdistrict_id: String
+  telepon: String
+  updatedAt: DateTime
+  website: String
+}
+
+type settingSyncCountAggregate {
+  alamat: Int
+  background: Int
+  city_id: Int
+  createdAt: Int
+  district_id: Int
+  email: Int
+  id: Int
+  jamMasuk: Int
+  jamPulang: Int
+  kodePos: Int
+  latitude: Int
+  logoSekolah: Int
+  longitude: Int
+  namaSekolah: Int
+  npsn: Int
+  periode: Int
+  province_id: Int
+  radius: Int
+  subdistrict_id: Int
+  telepon: Int
+  updatedAt: Int
+  website: Int
+}
+
+type settingSyncMaxAggregate {
+  alamat: String
+  background: String
+  city_id: String
+  createdAt: DateTime
+  district_id: String
+  email: String
+  id: ID
+  jamMasuk: String
+  jamPulang: String
+  kodePos: String
+  latitude: String
+  logoSekolah: String
+  longitude: String
+  namaSekolah: String
+  npsn: String
+  periode: String
+  province_id: String
+  radius: String
+  subdistrict_id: String
+  telepon: String
+  updatedAt: DateTime
+  website: String
+}
+
+type settingSyncMinAggregate {
+  alamat: String
+  background: String
+  city_id: String
+  createdAt: DateTime
+  district_id: String
+  email: String
+  id: ID
+  jamMasuk: String
+  jamPulang: String
+  kodePos: String
+  latitude: String
+  logoSekolah: String
+  longitude: String
+  namaSekolah: String
+  npsn: String
+  periode: String
+  province_id: String
+  radius: String
+  subdistrict_id: String
+  telepon: String
+  updatedAt: DateTime
+  website: String
+}
+
+type subdistrictSync {
+  active: Boolean!
+  district: districtSync
+  id: ID!
+  name: String!
+  no_kab: String
+  no_kec: String
+  no_kel: String
+  no_prop: String
+}
+
+type subdistrictSyncAggregateGroupBy {
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_kel: String
+  no_prop: String
+}
+
+type subdistrictSyncCountAggregate {
+  id: Int
+  name: Int
+  no_kab: Int
+  no_kec: Int
+  no_kel: Int
+  no_prop: Int
+}
+
+input subdistrictSyncFilter {
+  and: [subdistrictSyncFilter!]
+  district: subdistrictSyncFilterdistrictSyncFilter
+  id: IDFilterComparison
+  name: StringFieldComparison
+  no_kab: StringFieldComparison
+  no_kec: StringFieldComparison
+  no_kel: StringFieldComparison
+  no_prop: StringFieldComparison
+  or: [subdistrictSyncFilter!]
+}
+
+input subdistrictSyncFilterdistrictSyncFilter {
+  and: [subdistrictSyncFilterdistrictSyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  no_kab: StringFieldComparison
+  no_kec: StringFieldComparison
+  no_prop: StringFieldComparison
+  or: [subdistrictSyncFilterdistrictSyncFilter!]
+}
+
+type subdistrictSyncMaxAggregate {
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_kel: String
+  no_prop: String
+}
+
+type subdistrictSyncMinAggregate {
+  id: ID
+  name: String
+  no_kab: String
+  no_kec: String
+  no_kel: String
+  no_prop: String
+}
+
+input subdistrictSyncSort {
+  direction: SortDirection!
+  field: subdistrictSyncSortFields!
+  nulls: SortNulls
+}
+
+enum subdistrictSyncSortFields {
+  id
+  name
+  no_kab
+  no_kec
+  no_kel
+  no_prop
+}
+
+type transactionclinician {
+  id: ID!
+  menu: menu!
+  menu_id: String!
+  role: roleSync!
+  role_id: String!
+}
+
+type transactionclinicianAggregateGroupBy {
+  id: ID
+}
+
+type transactionclinicianCountAggregate {
+  id: Int
+}
+
+input transactionclinicianFilter {
+  and: [transactionclinicianFilter!]
+  id: IDFilterComparison
+  menu: transactionclinicianFiltermenuFilter
+  or: [transactionclinicianFilter!]
+  role: transactionclinicianFilterroleSyncFilter
+}
+
+input transactionclinicianFiltermenuFilter {
+  and: [transactionclinicianFiltermenuFilter!]
+  fieldname: StringFieldComparison
+  id: IDFilterComparison
+  menu_id: StringFieldComparison
+  name: StringFieldComparison
+  or: [transactionclinicianFiltermenuFilter!]
+  type: StringFieldComparison
+  url: StringFieldComparison
+}
+
+input transactionclinicianFilterroleSyncFilter {
+  and: [transactionclinicianFilterroleSyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [transactionclinicianFilterroleSyncFilter!]
+}
+
+type transactionclinicianMaxAggregate {
+  id: ID
+}
+
+type transactionclinicianMinAggregate {
+  id: ID
+}
+
+input transactionclinicianSort {
+  direction: SortDirection!
+  field: transactionclinicianSortFields!
+  nulls: SortNulls
+}
+
+enum transactionclinicianSortFields {
+  id
+}
+
+type userDetailDTO {
+  address: String
+  created_at: String
+  email: String
+  fullname: String
+  id: ID
+  phone: String
+  user_id: String
+  username: String
+}
+
+type userDetailTransDTO {
+  address: String
+  created_at: String
+  email: String
+  fullname: String
+  id: ID
+  phone: String
+  user_id: String
+  username: String
+}
+
+type userSync {
+  email: String!
+  id: ID!
+  isActive: Boolean!
+  password: String!
+  profiles(
+    """Specify to filter the records returned."""
+    filter: ProfileFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [ProfileSort!]! = []
+  ): [Profile!]
+  role_id: String
+  roles(
+    """Specify to filter the records returned."""
+    filter: roleSyncFilter! = {}
+
+    """Specify to sort results."""
+    sorting: [roleSyncSort!]! = []
+  ): [roleSync!]
+  username: String!
+}
+
+type userSyncAggregateGroupBy {
+  email: String
+  id: ID
+  role_id: String
+  username: String
+}
+
+type userSyncCountAggregate {
+  email: Int
+  id: Int
+  role_id: Int
+  username: Int
+}
+
+input userSyncFilter {
+  and: [userSyncFilter!]
+  email: StringFieldComparison
+  id: IDFilterComparison
+  or: [userSyncFilter!]
+  profile: userSyncFilterProfileFilter
+  role: userSyncFilterroleSyncFilter
+  role_id: StringFieldComparison
+  username: StringFieldComparison
+}
+
+input userSyncFilterProfileFilter {
+  address: StringFieldComparison
+  and: [userSyncFilterProfileFilter!]
+  dateOfBirth: DateFieldComparison
+  fullname: StringFieldComparison
+  gender: GenderTypeFilterComparison
+  id: IDFilterComparison
+  nip: StringFieldComparison
+  or: [userSyncFilterProfileFilter!]
+  phone: StringFieldComparison
+  placeOfBirth: StringFieldComparison
+  profilePhoto: StringFieldComparison
+  profilePhotoUrl: StringFieldComparison
+  user_id: StringFieldComparison
+}
+
+input userSyncFilterroleSyncFilter {
+  and: [userSyncFilterroleSyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [userSyncFilterroleSyncFilter!]
+}
+
+type userSyncMaxAggregate {
+  email: String
+  id: ID
+  role_id: String
+  username: String
+}
+
+type userSyncMinAggregate {
+  email: String
+  id: ID
+  role_id: String
+  username: String
+}
+
+input userSyncSort {
+  direction: SortDirection!
+  field: userSyncSortFields!
+  nulls: SortNulls
+}
+
+enum userSyncSortFields {
+  email
+  id
+  role_id
+  username
+}

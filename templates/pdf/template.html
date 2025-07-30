@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>PDF Absensi</title>
+    <style>
+      /* CSS */
+    </style>
+  </head>
+  <body>
+    <main>
+      <h2 style="text-align: center;">Rekapitulasi Absensi Guru</h2>
+
+      <table style="width: 100%; margin-top: 20px; border-collapse: collapse;" border="1">
+        <thead>
+          <tr>
+            <th style="padding: 8px;">Nama Guru</th>
+            <th style="padding: 8px;">NIP</th>
+            <th style="padding: 8px;">Tanggal</th>
+            <th style="padding: 8px;">Waktu</th>
+            <th style="padding: 8px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each absensi}}
+            <tr>
+              <td style="padding: 8px;">{{this.user.profile.fullname}}</td>
+              <td style="padding: 8px;">{{this.user.profile.nip}}</td>
+              <td style="padding: 8px;">{{this.tanggalFormatted}}</td>
+              <td style="padding: 8px;">{{this.waktuFormatted}}</td>
+              <td style="padding: 8px;">{{this.type}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <p style="margin-top: 40px;">Sekolah: {{sekolah.namaSekolah}}</p>
+      <p>Alamat: {{sekolah.alamat}}</p>
+      <p>Periode: {{sekolah.periode}}</p>
+    </main>
+  </body>
+</html>
