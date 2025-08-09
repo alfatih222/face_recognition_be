@@ -11,7 +11,7 @@ import { setQueryWithParams } from '@/src/common/utils/string-helpers';
 
 @QueryService(UserEntity)
 export class UserService extends TypeOrmQueryService<UserEntity> {
- constructor(
+  constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private readonly profileService: ProfileService,
@@ -21,10 +21,9 @@ export class UserService extends TypeOrmQueryService<UserEntity> {
     private readonly manager: EntityManager,
   ) {
     super(userRepository, { useSoftDelete: true });
- }
-  
-  
-   async getUsers(params: {
+  }
+
+  async getUsers(params: {
     filter: UserDetailTableFilter;
     // paging: PagingInput;
     sorting: TrDataUserSorting[];

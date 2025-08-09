@@ -8,26 +8,6 @@ import { IsBoolean, IsOptional, IsString } from "class-validator";
 import { i18nValidationMessage } from "nestjs-i18n";
 
 @ObjectType('settingSync')
-@FilterableUnPagedRelation('city', () => CityDto, {
-    disableRemove: true,
-    disableUpdate: true,
-    nullable: true,
-})
-@FilterableUnPagedRelation('province', () => ProvinceDto, {
-    disableRemove: true,
-    disableUpdate: true,
-    nullable: true,
-})
-@FilterableUnPagedRelation('district', () => DistrictDto, {
-    disableRemove: true,
-    disableUpdate: true,
-    nullable: true,
-})
-@FilterableUnPagedRelation('subdistrict', () => SubdistrictDto, {
-    disableRemove: true,
-    disableUpdate: true,
-    nullable: true,
-})
 @QueryOptions({
     pagingStrategy: PagingStrategies.OFFSET,
     enableTotalCount: true,
@@ -58,22 +38,22 @@ export class MSettingDto {
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @IsOptional()
     @FilterableField({ nullable: true })
-    city_id?: string;
+    city?: string;
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @IsOptional()
     @FilterableField({ nullable: true })
-    province_id?: string;
+    province?: string;
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @IsOptional()
     @FilterableField({ nullable: true })
-    district_id?: string;
+    district?: string;
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @IsOptional()
     @FilterableField({ nullable: true })
-    subdistrict_id?: string;
+    subdistrict?: string;
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @FilterableField({ nullable: true })
@@ -141,8 +121,8 @@ export class MSettingDto {
 
 @ObjectType('ResponseSetting')
 export class ResponseSetting {
-    @Field(() => MSettingDto)
-    node: MSettingDto;
+     @Field(() => MSettingDto, { nullable: true }) // ✅ ubah menjadi nullable
+  nodes?: MSettingDto;
 
     @Field()
     message: string;

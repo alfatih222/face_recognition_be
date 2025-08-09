@@ -16,7 +16,7 @@ export class CreateProfileInput extends OmitType(
 ) { }
 
 @InputType()
-export class UpdateProfileInput extends PartialType(CreateProfileInput) { }
+export class UpdateProfileInput extends PartialType(CreateProfileInput) {}
 
 @InputType('UpdateProfileTypeInput')
 export class UpdateProfileTypeInput {

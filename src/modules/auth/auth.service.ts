@@ -83,7 +83,7 @@ export class AuthService {
 
     if (createUser) {
       profilePhotoData = await FileService.storeFile(
-        './public/uploads/profile' + '/' + createUser.id,
+        './public/uploads/profile',
         file,
         FileService.UploadType.IMAGE,
         this.i18n,

@@ -34,12 +34,12 @@ export class MSettingService extends TypeOrmQueryService<MSettingEntity> {
         } = input;
         let logoPath;
         let backgroundPath;
+        id = id.trim();
         const existingSetting = await this.settingRepository.findOne({
             where: {
-                id
+                id:id
             }
         });
-
         if (!existingSetting) {
             return either.error(new Error({ message: 'Data absensi tidak ditemukan' }));
         }
@@ -86,9 +86,22 @@ export class MSettingService extends TypeOrmQueryService<MSettingEntity> {
 
         return either.of(
             new ResponseSetting({
-                node: updated,
+                nodes: updated,
                 message: 'Setting berhasil diperbarui'
             })
         )
+    }
+
+    async getSetting(): Promise<Either<Error, MSettingEntity>> {
+        const Setting = await this.settingRepository.findOne({
+            where: {
+                isActive: true
+            }
+        });
+        if (!Setting) {
+            return either.error(new Error({ message: 'Data absensi tidak ditemukan' }));
+        }
+
+        return either.of(Setting);
     }
 }

@@ -22,14 +22,14 @@ export class ProfileResolver {
     @UseGuards(JwtAuthGuard)
     @Mutation(() => [UpdateProfileResultUnion])
     async updateProfile(
-        @Args({ name: 'profilePhoto', type: () => ImageFile, nullable: true })
-        profilePhoto: FileUpload,
         @Args({ name: 'id', type: () => ID, nullable: true })
         id: string,
         @Input() input: UpdateProfileInput,
         @GqlUser() user: UserEntity,
+        @Args({ name: 'profilePhoto', type: () => ImageFile, nullable: true })
+        profilePhoto?: FileUpload | null,
     ): Promise<Array<typeof UpdateProfileResultUnion>> {
-
+        console.log('oisds', input)
         const result = await this.profileService.updateProfile(
             id,
             { profilePhoto, ...input },

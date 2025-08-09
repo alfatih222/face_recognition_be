@@ -8,6 +8,8 @@ input AbsenInput {
 }
 
 type AbsenSync {
+  checkIn: String
+  checkOut: String
   createdAt: DateTime!
   date: String!
   id: ID!
@@ -15,17 +17,13 @@ type AbsenSync {
   lng: String!
   type: String!
   updatedAt: DateTime!
+  user: userSync
   user_id: String!
-  users(
-    """Specify to filter the records returned."""
-    filter: userSyncFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [userSyncSort!]! = []
-  ): [userSync!]
 }
 
 type AbsenSyncAggregateGroupBy {
+  checkIn: String
+  checkOut: String
   createdAt: DateTime
   date: String
   id: ID
@@ -36,7 +34,20 @@ type AbsenSyncAggregateGroupBy {
   user_id: String
 }
 
+type AbsenSyncConnection {
+  """Array of nodes."""
+  nodes: [AbsenSync!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
 type AbsenSyncCountAggregate {
+  checkIn: Int
+  checkOut: Int
   createdAt: Int
   date: Int
   id: Int
@@ -47,7 +58,34 @@ type AbsenSyncCountAggregate {
   user_id: Int
 }
 
+input AbsenSyncFilter {
+  and: [AbsenSyncFilter!]
+  checkIn: StringFieldComparison
+  checkOut: StringFieldComparison
+  createdAt: DateFieldComparison
+  date: StringFieldComparison
+  id: IDFilterComparison
+  lat: StringFieldComparison
+  lng: StringFieldComparison
+  or: [AbsenSyncFilter!]
+  type: StringFieldComparison
+  updatedAt: DateFieldComparison
+  user: AbsenSyncFilteruserSyncFilter
+  user_id: StringFieldComparison
+}
+
+input AbsenSyncFilteruserSyncFilter {
+  and: [AbsenSyncFilteruserSyncFilter!]
+  email: StringFieldComparison
+  id: IDFilterComparison
+  or: [AbsenSyncFilteruserSyncFilter!]
+  role_id: StringFieldComparison
+  username: StringFieldComparison
+}
+
 type AbsenSyncMaxAggregate {
+  checkIn: String
+  checkOut: String
   createdAt: DateTime
   date: String
   id: ID
@@ -59,6 +97,8 @@ type AbsenSyncMaxAggregate {
 }
 
 type AbsenSyncMinAggregate {
+  checkIn: String
+  checkOut: String
   createdAt: DateTime
   date: String
   id: ID
@@ -67,6 +107,25 @@ type AbsenSyncMinAggregate {
   type: String
   updatedAt: DateTime
   user_id: String
+}
+
+input AbsenSyncSort {
+  direction: SortDirection!
+  field: AbsenSyncSortFields!
+  nulls: SortNulls
+}
+
+enum AbsenSyncSortFields {
+  checkIn
+  checkOut
+  createdAt
+  date
+  id
+  lat
+  lng
+  type
+  updatedAt
+  user_id
 }
 
 type AttendanceResponse {
@@ -384,7 +443,7 @@ type PdfResponse {
 type Profile {
   address: String
   createdAt: DateTime!
-  dateOfBirth: DateTime
+  dateOfBirth: String
   fullname: String
   gender: GenderType
   id: ID!
@@ -399,7 +458,7 @@ type Profile {
 
 type ProfileAggregateGroupBy {
   address: String
-  dateOfBirth: DateTime
+  dateOfBirth: String
   fullname: String
   gender: GenderType
   id: ID
@@ -436,7 +495,7 @@ type ProfileCountAggregate {
 input ProfileFilter {
   address: StringFieldComparison
   and: [ProfileFilter!]
-  dateOfBirth: DateFieldComparison
+  dateOfBirth: StringFieldComparison
   fullname: StringFieldComparison
   gender: GenderTypeFilterComparison
   id: IDFilterComparison
@@ -461,7 +520,7 @@ input ProfileFilteruserSyncFilter {
 
 type ProfileMaxAggregate {
   address: String
-  dateOfBirth: DateTime
+  dateOfBirth: String
   fullname: String
   gender: GenderType
   id: ID
@@ -475,7 +534,7 @@ type ProfileMaxAggregate {
 
 type ProfileMinAggregate {
   address: String
-  dateOfBirth: DateTime
+  dateOfBirth: String
   fullname: String
   gender: GenderType
   id: ID
@@ -535,6 +594,16 @@ type Query {
     """The id of the record to find."""
     id: ID!
   ): AbsenSync
+  absens(
+    """Specify to filter the records returned."""
+    filter: AbsenSyncFilter! = {}
+
+    """Limit or page results."""
+    paging: OffsetPaging! = {limit: 10}
+
+    """Specify to sort results."""
+    sorting: [AbsenSyncSort!]! = []
+  ): AbsenSyncConnection!
   citySync(
     """The id of the record to find."""
     id: ID!
@@ -564,6 +633,7 @@ type Query {
     sorting: [districtSyncSort!]! = []
   ): DistrictSyncConnection!
   getRefreshToken(token: String!): [GetRefreshTokenResult!]!
+  getSetting: settingSync!
   getUserData(filter: UserDetailTableFilter, paging: PagingInput, sorting: [TrDataUserSorting!]!): ResultDetailUserDTO!
   me: userSync!
   menu(
@@ -683,7 +753,7 @@ union RegisterUserResult = AuthUserResponse | Error | InvalidInputError
 
 type ResponseSetting {
   message: String!
-  node: settingSync!
+  nodes: settingSync
 }
 
 type ResultDetailUserDTO {
@@ -710,8 +780,8 @@ type RoleSyncConnection {
 input SettingSync {
   alamat: String
   background: String
-  city_id: String
-  district_id: String
+  city: String
+  district: String
   email: String
   jamMasuk: String
   jamPulang: String
@@ -722,9 +792,9 @@ input SettingSync {
   namaSekolah: String!
   npsn: String
   periode: String
-  province_id: String
+  province: String
   radius: String
-  subdistrict_id: String
+  subdistrict: String
   telepon: String
   website: String
 }
@@ -864,7 +934,7 @@ input UpdateOneTransactionclinicianInput {
 
 input UpdateProfileInput {
   address: String
-  dateOfBirth: DateTime
+  dateOfBirth: String
   fullname: String
   gender: GenderType
   nip: String
@@ -1193,23 +1263,9 @@ enum roleSyncSortFields {
 type settingSync {
   alamat: String
   background: String
-  cities(
-    """Specify to filter the records returned."""
-    filter: citySyncFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [citySyncSort!]! = []
-  ): [citySync!]
-  city_id: String
+  city: String
   createdAt: DateTime!
-  district_id: String
-  districts(
-    """Specify to filter the records returned."""
-    filter: districtSyncFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [districtSyncSort!]! = []
-  ): [districtSync!]
+  district: String
   email: String
   id: ID!
   isActive: Boolean!
@@ -1222,23 +1278,9 @@ type settingSync {
   namaSekolah: String!
   npsn: String
   periode: String
-  province_id: String
-  provinces(
-    """Specify to filter the records returned."""
-    filter: provinceSyncFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [provinceSyncSort!]! = []
-  ): [provinceSync!]
+  province: String
   radius: String
-  subdistrict_id: String
-  subdistricts(
-    """Specify to filter the records returned."""
-    filter: subdistrictSyncFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [subdistrictSyncSort!]! = []
-  ): [subdistrictSync!]
+  subdistrict: String
   telepon: String
   updatedAt: DateTime!
   website: String
@@ -1247,9 +1289,9 @@ type settingSync {
 type settingSyncAggregateGroupBy {
   alamat: String
   background: String
-  city_id: String
+  city: String
   createdAt: DateTime
-  district_id: String
+  district: String
   email: String
   id: ID
   jamMasuk: String
@@ -1261,9 +1303,9 @@ type settingSyncAggregateGroupBy {
   namaSekolah: String
   npsn: String
   periode: String
-  province_id: String
+  province: String
   radius: String
-  subdistrict_id: String
+  subdistrict: String
   telepon: String
   updatedAt: DateTime
   website: String
@@ -1272,9 +1314,9 @@ type settingSyncAggregateGroupBy {
 type settingSyncCountAggregate {
   alamat: Int
   background: Int
-  city_id: Int
+  city: Int
   createdAt: Int
-  district_id: Int
+  district: Int
   email: Int
   id: Int
   jamMasuk: Int
@@ -1286,9 +1328,9 @@ type settingSyncCountAggregate {
   namaSekolah: Int
   npsn: Int
   periode: Int
-  province_id: Int
+  province: Int
   radius: Int
-  subdistrict_id: Int
+  subdistrict: Int
   telepon: Int
   updatedAt: Int
   website: Int
@@ -1297,9 +1339,9 @@ type settingSyncCountAggregate {
 type settingSyncMaxAggregate {
   alamat: String
   background: String
-  city_id: String
+  city: String
   createdAt: DateTime
-  district_id: String
+  district: String
   email: String
   id: ID
   jamMasuk: String
@@ -1311,9 +1353,9 @@ type settingSyncMaxAggregate {
   namaSekolah: String
   npsn: String
   periode: String
-  province_id: String
+  province: String
   radius: String
-  subdistrict_id: String
+  subdistrict: String
   telepon: String
   updatedAt: DateTime
   website: String
@@ -1322,9 +1364,9 @@ type settingSyncMaxAggregate {
 type settingSyncMinAggregate {
   alamat: String
   background: String
-  city_id: String
+  city: String
   createdAt: DateTime
-  district_id: String
+  district: String
   email: String
   id: ID
   jamMasuk: String
@@ -1336,9 +1378,9 @@ type settingSyncMinAggregate {
   namaSekolah: String
   npsn: String
   periode: String
-  province_id: String
+  province: String
   radius: String
-  subdistrict_id: String
+  subdistrict: String
   telepon: String
   updatedAt: DateTime
   website: String
@@ -1515,21 +1557,9 @@ type userSync {
   id: ID!
   isActive: Boolean!
   password: String!
-  profiles(
-    """Specify to filter the records returned."""
-    filter: ProfileFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [ProfileSort!]! = []
-  ): [Profile!]
+  profile: Profile
+  role: roleSync
   role_id: String
-  roles(
-    """Specify to filter the records returned."""
-    filter: roleSyncFilter! = {}
-
-    """Specify to sort results."""
-    sorting: [roleSyncSort!]! = []
-  ): [roleSync!]
   username: String!
 }
 
@@ -1561,7 +1591,7 @@ input userSyncFilter {
 input userSyncFilterProfileFilter {
   address: StringFieldComparison
   and: [userSyncFilterProfileFilter!]
-  dateOfBirth: DateFieldComparison
+  dateOfBirth: StringFieldComparison
   fullname: StringFieldComparison
   gender: GenderTypeFilterComparison
   id: IDFilterComparison

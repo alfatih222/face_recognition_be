@@ -9,6 +9,7 @@ import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import {
   IsDateString,
   IsNumberString,
+  IsString,
   MinLength,
 } from 'class-validator';
 import { UserDto } from '../../master/user/user.dto';
@@ -36,12 +37,9 @@ export class ProfileDto {
   @FilterableField({ nullable: true })
   placeOfBirth?: string;
 
-  @IsDateString(
-    {},
-    { message: i18nValidationMessage('validation.INVALID_DATE') },
-  )
+ 
   @FilterableField({ nullable: true })
-  dateOfBirth?: Date;
+  dateOfBirth?: string;
 
   @FilterableField(() => GenderType, { nullable: true })
   gender?: GenderType;
@@ -49,7 +47,8 @@ export class ProfileDto {
   @FilterableField({ nullable: true })
   address?: string;
 
-  @IsNumberString({}, { message: i18nValidationMessage('validation.NUMBER') })
+  // @IsNumberString({}, { message: i18nValidationMessage('validation.NUMBER') })
+  @IsString()
   @FilterableField({ nullable: true })
   phone?: string;
 
@@ -67,7 +66,8 @@ export class ProfileDto {
     middleware: [
       (a, b) => {
         const src = a.source.profile_photo;
-        return src ? pathToUrl(src) : null;
+        console.log('sasasa', src)
+        return src ? pathToUrl(`profile/${src}`) : null;
       },
     ],
     nullable: true,

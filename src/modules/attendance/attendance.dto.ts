@@ -1,20 +1,21 @@
 import { enumToDesc } from "@/src/common/utils/object-helpers";
 import { UserDto } from "@/src/modules/master/user/user.dto";
-import { FilterableField, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions } from "@nestjs-query/query-graphql";
-import { GraphQLISODateTime, ID, ObjectType } from "@nestjs/graphql";
+import { FilterableField, FilterableRelation, FilterableUnPagedRelation, IDField, PagingStrategies, QueryOptions } from "@nestjs-query/query-graphql";
+import { Field, GraphQLISODateTime, ID, ObjectType } from "@nestjs/graphql";
 import { IsOptional, IsString } from "class-validator";
 import { i18nValidationMessage } from "nestjs-i18n";
 
 
 @ObjectType('AbsenSync')
-@FilterableUnPagedRelation('user', () => UserDto, {
-    disableRemove: true,
-    disableUpdate: true,
-    nullable: true,
-})
 @QueryOptions({
     pagingStrategy: PagingStrategies.OFFSET,
     enableTotalCount: true,
+})
+
+@FilterableRelation('user', () => UserDto, {
+    disableRemove: true,
+    disableUpdate: true,
+    nullable: true,
 })
 export class AttendanceDto {
     @IDField(() => ID)
@@ -31,6 +32,14 @@ export class AttendanceDto {
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @FilterableField()
     lat: string;
+
+    @IsString({ message: i18nValidationMessage('validation.STRING') })
+    @FilterableField({nullable:true})
+    checkIn: string;
+
+    @IsString({ message: i18nValidationMessage('validation.STRING') })
+    @FilterableField({nullable:true})
+    checkOut?: string;
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @FilterableField()

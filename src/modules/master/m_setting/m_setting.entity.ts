@@ -20,41 +20,25 @@ export class MSettingEntity extends BaseEntity {
     @Column({ nullable: true })
     alamat?: string;
 
-    @ManyToOne(() => City, (city) => city.id, { nullable: true })
-    @JoinColumn({ name: 'city_id' })
-    city: City;
+    @Column({
+        nullable: true,
+    })
+    city: string;
 
     @Column({
         nullable: true,
     })
-    city_id: string;
-
-    @ManyToOne(() => Province, (province) => province.id, { nullable: true })
-    @JoinColumn({ name: 'province_id' })
-    province: Province;
+    province: string;
 
     @Column({
         nullable: true,
     })
-    province_id: string;
-
-    @ManyToOne(() => District, (district) => district.id, { nullable: true })
-    @JoinColumn({ name: 'district_id' })
-    district: District;
+    district: string;
 
     @Column({
         nullable: true,
     })
-    district_id: string;
-
-    @ManyToOne(() => Subdistrict, (subdistrict) => subdistrict.id, { nullable: true })
-    @JoinColumn({ name: 'subdistrict_id' })
-    subdistrict: Subdistrict;
-
-    @Column({
-        nullable: true,
-    })
-    subdistrict_id: string;
+    subdistrict: string;
 
     @Column({ nullable: true })
     kodePos?: string;

@@ -1,6 +1,7 @@
 import { RoleDto } from '@/src/modules/master/m_role/role.dto';
 import {
   FilterableField,
+  FilterableRelation,
   FilterableUnPagedRelation,
   IDField,
   PagingStrategies,
@@ -11,17 +12,17 @@ import { IsBoolean, IsEmail, MinLength } from 'class-validator';
 import { ProfileDto } from '../profile/profile.dto';
 
 @ObjectType('userSync')
-@FilterableUnPagedRelation('role', () => RoleDto, {
-  disableRemove: true,
-  disableUpdate: true,
-  nullable: true,
-})
-@FilterableUnPagedRelation('profile', () => ProfileDto, {
-  disableRemove: true,
-  disableUpdate: true,
-  nullable: true,
-})
 @QueryOptions({ pagingStrategy: PagingStrategies.OFFSET })
+@FilterableRelation('role', () => RoleDto, {
+  disableRemove: true,
+  disableUpdate: true,
+  nullable: true,
+})
+@FilterableRelation('profile', () => ProfileDto, {
+  disableRemove: true,
+  disableUpdate: true,
+  nullable: true,
+})
 export class UserDto {
   @IDField(() => ID)
   id?: string;

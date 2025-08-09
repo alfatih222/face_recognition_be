@@ -13,9 +13,15 @@ export class AttendanceEntity extends BaseEntity {
     user_id: string;
 
     @Column({
-        type: 'timestamp',
+        type: 'date',
     })
     date: string;
+
+    @Column({nullable:true})
+    checkIn: string;
+
+    @Column({nullable:true})
+    checkOut: string;
 
     @Column()
     lat: string;

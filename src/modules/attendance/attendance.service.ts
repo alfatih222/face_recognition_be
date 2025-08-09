@@ -36,46 +36,38 @@ export class AttendanceService extends TypeOrmQueryService<AttendanceEntity> imp
   }
 
   async createAttendance(input: any, user: UserEntity): Promise<AttendanceResponse> {
-    const {
-      file,
-      ...inputAbsensi
-    }: {
-      file: FileUpload;
-      inputAbsensi: AttendanceInput;
-    } = input;
-    // entityManager For setting school
-    const setting = await this.entityManager.getRepository(MSettingEntity).findOne({ where: { isActive: true } })
-    console.log('setting', setting);
-    // batasi jam absen
+    const { file, lat, lng } = input;
+    const setting = await this.entityManager.getRepository(MSettingEntity).findOne({ where: { isActive: true } });
+    if (!setting) {
+      throw new Error('Setting absensi aktif tidak ditemukan.');
+    }
     const attendanceType = getAttendanceTypeByTime(setting);
-    console.log('attendanceType', attendanceType);
-    // get data absen per user dan per hari
-    const todayStart = new Date(moment().startOf('day').format());
-    const todayEnd = new Date(moment().endOf('day').format());
-    const exsist = await this.attendenceRepo.findOne({
-      where: {
-        user_id: user.id,
-        date: Between(todayStart, todayEnd) as any,
-      },
-      order: {
-        date: 'DESC'
-      },
-      relations: ['user']
-    })
-    console.log('exsist', exsist);
     if (attendanceType === 'Invalid') {
       return new AttendanceResponse({
         allow: false,
         message: await this.i18n.t('validation.ATTENDANCE_TIME_INVALID'),
       });
     }
+    const todayStart = moment().startOf('day').toDate();
+    const todayEnd = moment().endOf('day').toDate();
+    const date = moment().format('YYYY-MM-DD');
+    const time = moment().format('HH:mm:ss');
 
-    if (attendanceType === 'Masuk' && exsist) {
-      return new AttendanceResponse({
-        allow: false,
-        message: await this.i18n.t('validation.ALREADY_ATTEND_TODAY'),
-      });
-    }
+    const exsist = await this.attendenceRepo.findOne({
+      where: {
+        user_id: user.id,
+        date: Between(todayStart, todayEnd) as any,
+      },
+      order: { date: 'DESC' },
+      relations: ['user'],
+    });
+
+    // if (attendanceType === 'Masuk' && exsist) {
+    //   return new AttendanceResponse({
+    //     allow: false,
+    //     message: await this.i18n.t('validation.ALREADY_ATTEND_TODAY'),
+    //   });
+    // }
 
     if (attendanceType === 'Pulang' && !exsist) {
       return new AttendanceResponse({
@@ -85,51 +77,75 @@ export class AttendanceService extends TypeOrmQueryService<AttendanceEntity> imp
     }
 
     // location
-    const distance = await location(input.lat.toString(),
-      input.lng.toString(), setting.latitude, setting.longitude);
-    console.log('distance', distance);
+    const distance = await location(
+      lat.toString(),
+      lng.toString(),
+      setting.latitude,
+      setting.longitude
+    );
     const isInsideArea = distance <= Number(setting.radius);
     if (!isInsideArea) {
       return new AttendanceResponse({
-        message: `${await this.i18n.t('validation.LOCATION')}`,
-        allow: false
+        message: await this.i18n.t('validation.LOCATION'),
+        allow: false,
       });
     }
 
     // face recognition
-    const userDescriptor = await face_recognition(user, this.faceCache);
-    console.log('userDescriptor', userDescriptor);
-    if (!userDescriptor) return new AttendanceResponse({
-      allow: false,
-      message: `${await this.i18n.t('validation.USER')}`
-    });
+    if (!this.faceCache.has(user.id.toString())) {
+      const descriptor = await face_recognition(user, this.faceCache);
+      if (!descriptor) {
+        return new AttendanceResponse({
+          allow: false,
+          message: await this.i18n.t('validation.USER'),
+        });
+      }
+      this.faceCache.set(user.id.toString(), descriptor);
+    }
+    const userDescriptor = this.faceCache.get(user.id.toString());
     const imageBuffer = await FileService.toBuffer(file);
-    console.log('imageBuffer', imageBuffer);
     const img = await canvas.loadImage(imageBuffer);
-    console.log('img', img);
     const detections = await faceapi
       .detectSingleFace(img as any)
       .withFaceLandmarks()
       .withFaceDescriptor();
-    console.log('detection', detections);
-    if (!detections) return new AttendanceResponse({
-      message: `${await this.i18n.t('validation.FACE')}`,
-      allow: false
-    });
+
+    if (!detections) {
+      console.warn('Wajah tidak terdeteksi dalam gambar.');
+      return new AttendanceResponse({
+        message: await this.i18n.t('validation.FACE'),
+        allow: false,
+      });
+    }
+    const faceMatcher = new faceapi.FaceMatcher(userDescriptor, 0.6);
+    const bestMatch = faceMatcher.findBestMatch(detections.descriptor);
+    if (bestMatch.label !== user.id.toString()) {
+      return new AttendanceResponse({
+        allow: false,
+        message: await this.i18n.t('validation.FACE_NOT_MATCH'),
+      });
+    }
     // create absensi
-    await this.attendenceRepo.insert({
-      date: new Date() as any,
-      type: attendanceType,
-      lat: input.lat,
-      lng: input.lng,
-      user_id: user.id,
-      created_by: user.id
-    });
+    if (exsist && exsist.checkIn != null) {
+      exsist.checkOut = time;
+      exsist.updatedAt = new Date();
+      await this.attendenceRepo.save(exsist);
+    } else {
+      await this.attendenceRepo.insert({
+        date: date,
+        checkIn: time,
+        type: attendanceType,
+        lat: lat.toString(),
+        lng: lng.toString(),
+        user_id: user.id,
+        created_by: user.id,
+      });
+    }
 
     return new AttendanceResponse({
       allow: true,
-      message: `${await this.i18n.t('validation.ABSEN_SUCCESS')}`
-    })
+      message: await this.i18n.t('validation.ABSEN_SUCCESS'),
+    });
   }
 
 }

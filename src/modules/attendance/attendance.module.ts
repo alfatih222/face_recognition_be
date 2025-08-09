@@ -26,7 +26,7 @@ import { JwtAuthGuard } from '@/src/common/guards/jwt-auth.guard';
           guards:[JwtAuthGuard],
           read: {
             one: { name: 'absen' },
-            many: { disabled: true },
+            many: { name: 'absens' },
           },
           create: {
             one: { disabled: true },

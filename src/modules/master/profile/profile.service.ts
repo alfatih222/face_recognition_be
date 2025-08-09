@@ -27,12 +27,12 @@ export class ProfileService {
         }: {
             profilePhoto: FileUpload;
             inputProfile: UpdateProfileInput;
-        } = input;
+            } = input;
+        console.log('oiapsas', inputProfile)
         const oldProfile = await this.profileRepository.findOneBy({
             id,
             user: { id: user.id },
         });
-
         if (!oldProfile) {
             return either.error(
                 new Error({
@@ -61,7 +61,7 @@ export class ProfileService {
             // UPLOAD IMAGE PROFILE
             if (profilePhoto) {
                 const profilePhotoUploaded = await FileService.storeFile(
-                    './public/uploads/profile' + '/' + user.id,
+                    './public/uploads/profile',
                     profilePhoto,
                     FileService.UploadType.IMAGE,
                     this.i18n,
@@ -82,7 +82,13 @@ export class ProfileService {
                 await this.profileRepository.update(
                     { id },
                     {
-                        ...inputProfile,
+                        address: inputProfile['address'],
+                        fullname: inputProfile['fullname'],
+                        gender: inputProfile['gender'],
+                        nip: inputProfile['nip'],
+                        phone: inputProfile['phone'],
+                        placeOfBirth: inputProfile['placeOfBirth'],
+                        dateOfBirth:inputProfile['dateOfBirth'],
                         ...photos,
                         user,
                     },
@@ -98,7 +104,7 @@ export class ProfileService {
                 photos.profilePhoto != oldProfile.profile_photo
             ) {
                 await FileService.deleteFile(
-                    './public/uploads/profile' + '/' + user.id,
+                    './public/uploads/profile',
                     oldProfile.profile_photo,
                 );
             }
