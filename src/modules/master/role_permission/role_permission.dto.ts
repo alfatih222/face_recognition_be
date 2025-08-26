@@ -9,7 +9,7 @@ import { RoleDto } from '../m_role/role.dto';
 import { MenuDto } from '../menu/menu.dto';
 
 
-@ObjectType('transactionclinician')
+@ObjectType('rolePermission')
 @QueryOptions({
   pagingStrategy: PagingStrategies.OFFSET,
   enableTotalCount: true,

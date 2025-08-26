@@ -3,8 +3,8 @@
 # ------------------------------------------------------
 
 input AbsenInput {
-  lat: Float!
-  lng: Float!
+  latitude: Float!
+  longitude: Float!
 }
 
 type AbsenSync {
@@ -13,8 +13,8 @@ type AbsenSync {
   createdAt: DateTime!
   date: String!
   id: ID!
-  lat: String!
-  lng: String!
+  latitude: String!
+  longitude: String!
   type: String!
   updatedAt: DateTime!
   user: userSync
@@ -27,8 +27,8 @@ type AbsenSyncAggregateGroupBy {
   createdAt: DateTime
   date: String
   id: ID
-  lat: String
-  lng: String
+  latitude: String
+  longitude: String
   type: String
   updatedAt: DateTime
   user_id: String
@@ -51,8 +51,8 @@ type AbsenSyncCountAggregate {
   createdAt: Int
   date: Int
   id: Int
-  lat: Int
-  lng: Int
+  latitude: Int
+  longitude: Int
   type: Int
   updatedAt: Int
   user_id: Int
@@ -65,8 +65,8 @@ input AbsenSyncFilter {
   createdAt: DateFieldComparison
   date: StringFieldComparison
   id: IDFilterComparison
-  lat: StringFieldComparison
-  lng: StringFieldComparison
+  latitude: StringFieldComparison
+  longitude: StringFieldComparison
   or: [AbsenSyncFilter!]
   type: StringFieldComparison
   updatedAt: DateFieldComparison
@@ -89,8 +89,8 @@ type AbsenSyncMaxAggregate {
   createdAt: DateTime
   date: String
   id: ID
-  lat: String
-  lng: String
+  latitude: String
+  longitude: String
   type: String
   updatedAt: DateTime
   user_id: String
@@ -102,8 +102,8 @@ type AbsenSyncMinAggregate {
   createdAt: DateTime
   date: String
   id: ID
-  lat: String
-  lng: String
+  latitude: String
+  longitude: String
   type: String
   updatedAt: DateTime
   user_id: String
@@ -121,11 +121,17 @@ enum AbsenSyncSortFields {
   createdAt
   date
   id
-  lat
-  lng
+  latitude
+  longitude
   type
   updatedAt
   user_id
+}
+
+type AttendanceDTO {
+  nodes: [AbsenSync!]
+  pageInfo: navigatePages!
+  totalCount: Int!
 }
 
 type AttendanceResponse {
@@ -183,14 +189,14 @@ input CreateOneProvinceSyncInput {
   provinceSync: ProvinceSync!
 }
 
+input CreateOneRolePermissionInput {
+  """The record to create"""
+  rolePermission: RolePermission!
+}
+
 input CreateOneSubdistrictSyncInput {
   """The record to create"""
   subdistrictSync: SubdistrictSync!
-}
-
-input CreateOneTransactionclinicianInput {
-  """The record to create"""
-  transactionclinician: RolePermission!
 }
 
 union CreatePDFResult = Error | InvalidInputError | PdfResponse
@@ -240,12 +246,12 @@ input DeleteOneProvinceSyncInput {
   id: ID!
 }
 
-input DeleteOneSubdistrictSyncInput {
+input DeleteOneRolePermissionInput {
   """The id of the record to delete."""
   id: ID!
 }
 
-input DeleteOneTransactionclinicianInput {
+input DeleteOneSubdistrictSyncInput {
   """The id of the record to delete."""
   id: ID!
 }
@@ -402,9 +408,9 @@ type Mutation {
   provinceSyncUpdate(input: UpdateOneProvinceSyncInput!): provinceSync!
   refreshToken(input: InputRefreshToken!): [RefreshTokenResult!]!
   register(file: Upload!, input: RegisterInput!): [RegisterUserResult!]!
-  rolePermisionCreate(input: CreateOneTransactionclinicianInput!): transactionclinician!
-  rolePermisionDelete(input: DeleteOneTransactionclinicianInput!): TransactionclinicianDeleteResponse!
-  rolePermisionUpdate(input: UpdateOneTransactionclinicianInput!): transactionclinician!
+  rolePermisionCreate(input: CreateOneRolePermissionInput!): rolePermission!
+  rolePermisionDelete(input: DeleteOneRolePermissionInput!): RolePermissionDeleteResponse!
+  rolePermisionUpdate(input: UpdateOneRolePermissionInput!): rolePermission!
   subdistrictSyncCreate(input: CreateOneSubdistrictSyncInput!): subdistrictSync!
   subdistrictSyncDelete(input: DeleteOneSubdistrictSyncInput!): SubdistrictSyncDeleteResponse!
   subdistrictSyncUpdate(input: UpdateOneSubdistrictSyncInput!): subdistrictSync!
@@ -632,6 +638,7 @@ type Query {
     """Specify to sort results."""
     sorting: [districtSyncSort!]! = []
   ): DistrictSyncConnection!
+  getAttendences(filter: TableFilter, paging: PagingInput, sorting: [SortingData!]!): AttendanceDTO!
   getRefreshToken(token: String!): [GetRefreshTokenResult!]!
   getSetting: settingSync!
   getUserData(filter: UserDetailTableFilter, paging: PagingInput, sorting: [TrDataUserSorting!]!): ResultDetailUserDTO!
@@ -685,17 +692,17 @@ type Query {
   rolePermision(
     """The id of the record to find."""
     id: ID!
-  ): transactionclinician
+  ): rolePermission
   rolePermisions(
     """Specify to filter the records returned."""
-    filter: transactionclinicianFilter! = {}
+    filter: rolePermissionFilter! = {}
 
     """Limit or page results."""
     paging: OffsetPaging! = {limit: 10}
 
     """Specify to sort results."""
-    sorting: [transactionclinicianSort!]! = []
-  ): TransactionclinicianConnection!
+    sorting: [rolePermissionSort!]! = []
+  ): RolePermissionConnection!
   roles(
     """Specify to filter the records returned."""
     filter: roleSyncFilter! = {}
@@ -758,12 +765,30 @@ type ResponseSetting {
 
 type ResultDetailUserDTO {
   nodes: [userDetailDTO!]
+  pageInfo: navigatePages!
   totalCount: Int!
 }
 
 input RolePermission {
   menu_id: String
   role_id: String!
+}
+
+type RolePermissionConnection {
+  """Array of nodes."""
+  nodes: [rolePermission!]!
+
+  """Paging information"""
+  pageInfo: OffsetPageInfo!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type RolePermissionDeleteResponse {
+  id: ID
+  menu_id: String
+  role_id: String
 }
 
 type RoleSyncConnection {
@@ -809,6 +834,14 @@ enum SortDirection {
 enum SortNulls {
   NULLS_FIRST
   NULLS_LAST
+}
+
+input SortingData {
+  """opts: `ASC` || `DESC`"""
+  direction: String
+
+  """opts: `date` || `user_id`"""
+  field: String!
 }
 
 input StringFieldComparison {
@@ -859,29 +892,32 @@ type SubdistrictSyncDeleteResponse {
   no_prop: String
 }
 
+input TableFilter {
+  and: [TableFilter!]
+
+  """use `iLike` filter'"""
+  checkIn: iLikeFilter
+
+  """use `iLike` filter'"""
+  checkOut: iLikeFilter
+
+  """use `iLike` filter'"""
+  date: iLikeFilter
+
+  """use `iLike` filter'"""
+  fullname: iLikeFilter
+  or: [TableFilter!]
+
+  """use `iLike` filter'"""
+  username: iLikeFilter
+}
+
 input TrDataUserSorting {
   """opts: `ASC` || `DESC`"""
   direction: String
 
   """opts: `id`"""
   field: String!
-}
-
-type TransactionclinicianConnection {
-  """Array of nodes."""
-  nodes: [transactionclinician!]!
-
-  """Paging information"""
-  pageInfo: OffsetPageInfo!
-
-  """Fetch total count of records"""
-  totalCount: Int!
-}
-
-type TransactionclinicianDeleteResponse {
-  id: ID
-  menu_id: String
-  role_id: String
 }
 
 input UpdateOneCitySyncInput {
@@ -916,20 +952,20 @@ input UpdateOneProvinceSyncInput {
   update: ProvinceSync!
 }
 
+input UpdateOneRolePermissionInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: RolePermission!
+}
+
 input UpdateOneSubdistrictSyncInput {
   """The id of the record to update"""
   id: ID!
 
   """The update to apply."""
   update: SubdistrictSync!
-}
-
-input UpdateOneTransactionclinicianInput {
-  """The id of the record to update"""
-  id: ID!
-
-  """The update to apply."""
-  update: RolePermission!
 }
 
 input UpdateProfileInput {
@@ -1178,6 +1214,11 @@ enum menuSortFields {
   url
 }
 
+type navigatePages {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 type provinceSync {
   active: Boolean!
   id: ID!
@@ -1213,6 +1254,66 @@ input provinceSyncSort {
 }
 
 enum provinceSyncSortFields {
+  id
+}
+
+type rolePermission {
+  id: ID!
+  menu: menu!
+  menu_id: String!
+  role: roleSync!
+  role_id: String!
+}
+
+type rolePermissionAggregateGroupBy {
+  id: ID
+}
+
+type rolePermissionCountAggregate {
+  id: Int
+}
+
+input rolePermissionFilter {
+  and: [rolePermissionFilter!]
+  id: IDFilterComparison
+  menu: rolePermissionFiltermenuFilter
+  or: [rolePermissionFilter!]
+  role: rolePermissionFilterroleSyncFilter
+}
+
+input rolePermissionFiltermenuFilter {
+  and: [rolePermissionFiltermenuFilter!]
+  fieldname: StringFieldComparison
+  id: IDFilterComparison
+  menu_id: StringFieldComparison
+  name: StringFieldComparison
+  or: [rolePermissionFiltermenuFilter!]
+  type: StringFieldComparison
+  url: StringFieldComparison
+}
+
+input rolePermissionFilterroleSyncFilter {
+  and: [rolePermissionFilterroleSyncFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [rolePermissionFilterroleSyncFilter!]
+}
+
+type rolePermissionMaxAggregate {
+  id: ID
+}
+
+type rolePermissionMinAggregate {
+  id: ID
+}
+
+input rolePermissionSort {
+  direction: SortDirection!
+  field: rolePermissionSortFields!
+  nulls: SortNulls
+}
+
+enum rolePermissionSortFields {
   id
 }
 
@@ -1468,66 +1569,6 @@ enum subdistrictSyncSortFields {
   no_kec
   no_kel
   no_prop
-}
-
-type transactionclinician {
-  id: ID!
-  menu: menu!
-  menu_id: String!
-  role: roleSync!
-  role_id: String!
-}
-
-type transactionclinicianAggregateGroupBy {
-  id: ID
-}
-
-type transactionclinicianCountAggregate {
-  id: Int
-}
-
-input transactionclinicianFilter {
-  and: [transactionclinicianFilter!]
-  id: IDFilterComparison
-  menu: transactionclinicianFiltermenuFilter
-  or: [transactionclinicianFilter!]
-  role: transactionclinicianFilterroleSyncFilter
-}
-
-input transactionclinicianFiltermenuFilter {
-  and: [transactionclinicianFiltermenuFilter!]
-  fieldname: StringFieldComparison
-  id: IDFilterComparison
-  menu_id: StringFieldComparison
-  name: StringFieldComparison
-  or: [transactionclinicianFiltermenuFilter!]
-  type: StringFieldComparison
-  url: StringFieldComparison
-}
-
-input transactionclinicianFilterroleSyncFilter {
-  and: [transactionclinicianFilterroleSyncFilter!]
-  id: IDFilterComparison
-  name: StringFieldComparison
-  or: [transactionclinicianFilterroleSyncFilter!]
-}
-
-type transactionclinicianMaxAggregate {
-  id: ID
-}
-
-type transactionclinicianMinAggregate {
-  id: ID
-}
-
-input transactionclinicianSort {
-  direction: SortDirection!
-  field: transactionclinicianSortFields!
-  nulls: SortNulls
-}
-
-enum transactionclinicianSortFields {
-  id
 }
 
 type userDetailDTO {

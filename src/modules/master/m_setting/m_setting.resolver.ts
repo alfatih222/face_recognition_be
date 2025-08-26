@@ -19,7 +19,7 @@ export class MSettingResolver {
 
     @ValidateInput()
     @Mutation(() => ResponseSetting)
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RoleBaseGuard)
     async updateSetting(
         @Args('id') id: string,
         @Input() input: MSettingInput,
@@ -40,9 +40,8 @@ export class MSettingResolver {
     }
 
     @Query(() => MSettingDto)
-    @UseGuards(JwtAuthGuard)
-    async getSetting(
-    ): Promise<MSettingEntity> {
+    // @UseGuards(JwtAuthGuard)
+    async getSetting(): Promise<MSettingEntity> {
         const res = await this.settingService.getSetting();
         if (res.isError) {
             return res.value;

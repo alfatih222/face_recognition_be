@@ -17,9 +17,9 @@ export async function face_recognition(user: any, faceCache: Map<string, faceapi
   if (faceCache.has(user.id)) {
     return faceCache.get(user.id)!;
   }
-  if (!user || !user.file) return null;
+  if (!user || !user.face) return null;
 
-  const imagePath = path.resolve(__dirname, `../uploads/face/${user.file}`);
+  const imagePath = path.resolve(__dirname, `../uploads/face/${user.face}`);
   if (!fs.existsSync(imagePath)) return null;
 
   try {

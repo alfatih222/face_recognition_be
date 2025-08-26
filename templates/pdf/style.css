@@ -2,7 +2,6 @@ body {
   font-family: Arial, sans-serif;
   font-size: 12px;
   color: #000;
-  padding: 20px;
 }
 
 h1, h2 {
@@ -18,10 +17,5 @@ table {
 
 th, td {
   padding: 10px;
-  border: 1px solid #000;
   text-align: left;
-}
-
-main {
-  margin-top: 20px;
 }

@@ -31,6 +31,6 @@ export class UserResolver {
     @Paging() paging: PagingInput,
     @Sorting(TrDataUserSorting) sorting: TrDataUserSorting[],
   ): Promise<ResultDetailUserDTO> {
-    return this.userService.getUsers({ filter, sorting });
+    return this.userService.getUsers({ filter,paging, sorting });
   }
 }

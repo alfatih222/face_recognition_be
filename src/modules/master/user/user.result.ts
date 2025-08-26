@@ -8,6 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { Error } from '../../../graphql/types/error.type';
 import { Success } from '../../../graphql/types/success.type';
+import { NavigatePages } from '@/src/common/input/datable.input';
 
 export const DeleteUserResultUnion = createUnionType({
   name: 'DeleteUserResult',
@@ -62,8 +63,8 @@ export class ResultDetailUserDTO {
   @Field(() => [userDetailDTO], { nullable: true, defaultValue: [] })
   nodes: userDetailDTO[];
 
-  // @Field(() => NavigatePages)
-  // pageInfo: NavigatePages;
+  @Field(() => NavigatePages)
+  pageInfo: NavigatePages;
 
   @Field(() => Int, { defaultValue: 0 })
   totalCount: number;

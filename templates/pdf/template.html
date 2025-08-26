@@ -9,8 +9,37 @@
   </head>
   <body>
     <main>
+      <table style="width: 100%;">
+  <tr>
+    <td style="width: 36%; text-align: start;">
+      <div style="font-weight: bold; font-size: 12px;">
+        <p style="margin: 0;">SEKOLAH DASAR ISLAM TERPADU</p>
+        <p style="margin: 0;">{{sekolah.namaSekolah}}</p>
+      </div>
+      <div style="font-weight: 100; font-size: 10px;">
+        <p style="margin: 0;">{{sekolah.alamat}} {{sekolah.kodePos}}</p>
+        <p style="margin: 0;">Telp {{sekolah.telepon}} Email. {{sekolah.email}}</p>
+      </div>
+    </td>
+    <td style="width: 20%; text-align: center;">
+      <div style="position: absolute; top: 0; left: 300px;">
+        <img src="{{sekolah.logo}}" alt="Logo" width="150" height="100" />
+      </div>
+    </td>
+    <td style="width: 40%; text-align: end;">
+       <div style="font-weight: bold; font-size: 12px;">
+        <p style="margin: 0;">YAYASAN MADINATUL ILMI AL-ISLAMI</p>
+        <p style="margin: 0;font-size: 20px;">مؤسسة التربية الإسلامية</p>
+      </div>
+      <div style="font-weight: 100; font-size: 10px;">
+        <p style="margin: 0; font-size: 20px;">مدينة العلم الإسلامي</p>
+        <p style="margin: 0; font-weight:700;">SK Menkumham No.:AHU-3013.AH.01.04.Tahun 2025</p>
+      </div>
+    </td>
+  </tr>
+</table>
+<hr style="margin-top: 20px; border: none; height: 2px; background-color: #000;" />
       <h2 style="text-align: center;">Rekapitulasi Absensi Guru</h2>
-
       <table style="width: 100%; margin-top: 20px; border-collapse: collapse;" border="1">
         <thead>
           <tr>
@@ -24,7 +53,7 @@
         <tbody>
           {{#each absensi}}
             <tr>
-              <td style="padding: 8px;">{{this.user.profile.fullname}}</td>
+              <td style="padding: 8px; word-spacing: normal;">{{this.user.profile.fullname}}</td>
               <td style="padding: 8px;">{{this.user.profile.nip}}</td>
               <td style="padding: 8px;">{{this.tanggalFormatted}}</td>
               <td style="padding: 8px;">{{this.waktuFormatted}}</td>
@@ -33,10 +62,23 @@
           {{/each}}
         </tbody>
       </table>
-
-      <p style="margin-top: 40px;">Sekolah: {{sekolah.namaSekolah}}</p>
-      <p>Alamat: {{sekolah.alamat}}</p>
-      <p>Periode: {{sekolah.periode}}</p>
+    <table style="width: 100%; margin-top: 20px;">
+  <tr>
+    <td style="width: 36%; text-align: start;">
+    </td>
+    <td style="width: 20%; text-align: center;">
+    </td>
+    <td style="width: 40%; text-align: end;">
+     <span>Tangerang, {{sekolah.date}}</span>
+     <p >Kepala Sekolah</p>
+     <br>
+     <br>
+     <br>
+     <br>
+     <p><u>Jalaludin</u></p>
+    </td>
+  </tr>
+</table>
     </main>
   </body>
 </html>

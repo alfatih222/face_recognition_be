@@ -21,7 +21,7 @@ import { MSettingResolver } from './m_setting.resolver';
           EntityClass: MSettingEntity,
           CreateDTOClass: MSettingInput,
           UpdateDTOClass: MSettingUpdate,
-          guards: [JwtAuthGuard, RoleBaseGuard],
+          // guards: [JwtAuthGuard, RoleBaseGuard],
           read: {
             one: { disabled: true },
             many: { disabled: true },

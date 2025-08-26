@@ -22,7 +22,8 @@
   "FACE": "Face tidak sesuai",
   "ABSEN_SUCCESS": "Absensi Berhasil",
   "LOCATION": "Anda tidak berada dalam lokasi yang di tentukan untuk melakukan absensi",
-  "ATTENDANCE_TIME_INVALID": "Anda sudah tidak bisa melakukan absen",
+  "ATTENDANCE_TIME_INVALID": "Anda sudah tidak bisa melakukan abseni",
   "ALREADY_ATTEND_TODAY": "Anda sudah melakukan absen hari ini",
-  "NO_CHECKIN_FOUND": "Anda belum melakukan absen masuk hari ini"
+  "NO_CHECKIN_FOUND": "Anda sudah tidak bisa melakukan absensi",
+  "FACE_NOT_MATCH": "Wajah anda tidak sesuai"
 }

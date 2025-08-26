@@ -23,5 +23,6 @@
   "LOCATION": "Anda tidak berada dalam lokasi yang di tentukan untuk melakukan absensi",
   "ATTENDANCE_TIME_INVALID": "Anda sudah tidak bisa melakukan absen",
   "ALREADY_ATTEND_TODAY": "Anda sudah melakukan absen hari ini",
-  "NO_CHECKIN_FOUND": "Anda belum melakukan absen masuk hari ini"
+  "NO_CHECKIN_FOUND": "Anda belum melakukan absen masuk hari ini",
+  "FACE_NOT_MATCH": "Face not match"
 }

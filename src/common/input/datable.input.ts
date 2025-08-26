@@ -33,7 +33,7 @@ export class LikeFilter {
 @InputType('iLikeFilter')
 export class ILikeFilter {
   @Field({ nullable: true })
-  iLike: string;
+  iLike?: string;
 }
 
 @InputType('isFilter')

@@ -24,10 +24,10 @@ export class AttendanceEntity extends BaseEntity {
     checkOut: string;
 
     @Column()
-    lat: string;
-
+    latitude: string;
+ 
     @Column()
-    lng: string;
+    longitude: string;
 
     @Column()
     type: string;

@@ -75,7 +75,7 @@ export class AuthService {
     const newUser = {
       ...inputRegister,
       role_id: "6a92adda-bfe8-4bd0-bf17-e581b97407ce",
-      file: facePath,
+      face: facePath,
     };
 
     // Simpan user baru
@@ -96,8 +96,7 @@ export class AuthService {
         user_id: createUser.id,
         profile_photo: !file ? null : profilePhotoData,
       });
-
-      // Beri response sukses
+      
       const successMessage = await this.i18n.t('auth.REGISTER_SUCCESS');
       const token = await this.signToken(createUser);
       return either.of(

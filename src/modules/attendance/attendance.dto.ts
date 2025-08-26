@@ -31,7 +31,7 @@ export class AttendanceDto {
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @FilterableField()
-    lat: string;
+    latitude: string;
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @FilterableField({nullable:true})
@@ -43,7 +43,7 @@ export class AttendanceDto {
 
     @IsString({ message: i18nValidationMessage('validation.STRING') })
     @FilterableField()
-    lng: string;
+    longitude: string;
 
     @FilterableField()
     type: string;

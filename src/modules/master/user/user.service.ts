@@ -2,12 +2,13 @@ import { QueryService } from '@nestjs-query/core';
 import { UserEntity } from './user.entity';
 import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { Brackets, EntityManager, Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
 import { I18nService } from 'nestjs-i18n';
 import { TrDataUserSorting, UserDetailTableFilter } from './user.input';
 import { ResultDetailUserDTO, userDetailDTO } from './user.result';
 import { setQueryWithParams } from '@/src/common/utils/string-helpers';
+import { ILikeFilter, PagingInput } from '@/src/common/input/datable.input';
 
 @QueryService(UserEntity)
 export class UserService extends TypeOrmQueryService<UserEntity> {
@@ -25,32 +26,42 @@ export class UserService extends TypeOrmQueryService<UserEntity> {
 
   async getUsers(params: {
     filter: UserDetailTableFilter;
-    // paging: PagingInput;
+    paging: PagingInput;
     sorting: TrDataUserSorting[];
   }): Promise<ResultDetailUserDTO> {
-    const { filter, sorting } = params;
+    const { filter = {}, paging = { limit: 10, offset: 0 }, sorting = [] } = params;
+    const { limit = 10, offset = 0 } = paging;
 
-    // filter variable
-    const {
-      email: { iLike: email },
-      username: { iLike: username },
-      // user_id: { eq: userId },
-      fullname: { iLike: fullname },
-    } = {
-      email: { iLike: null },
-      username: { iLike: null },
-      // user_id: { eq: null },
-      fullname: { iLike: null },
-      ...filter,
-      ...(filter.and ?? []).reduce((prev, dt) => ({ ...prev, ...dt }), {}),
-    };
+    const safeFilter = filter as Partial<UserDetailTableFilter>;
 
-    //paging variable
-    // const { limit = 10, offset = 0 } = paging;
+    const email: ILikeFilter = safeFilter.email ?? {};
+    const username: ILikeFilter = safeFilter.username ?? {};
+    const fullname: ILikeFilter = safeFilter.fullname ?? {};
+    const and = safeFilter.and ?? [];
+    const or = safeFilter.or ?? [];
 
-    // sorting variable
+    const mergedAndFilters = and.reduce(
+      (acc, curr) => {
+        return {
+          email: { ...acc.email, ...(curr.email ?? {}) },
+          username: { ...acc.username, ...(curr.username ?? {}) },
+          fullname: { ...acc.fullname, ...(curr.fullname ?? {}) },
+        };
+      },
+      { email: {}, username: {}, fullname: {} } as {
+        email: ILikeFilter;
+        username: ILikeFilter;
+        fullname: ILikeFilter;
+      }
+    );
+
+    const finalEmail = email.iLike ?? mergedAndFilters.email?.iLike ?? null;
+    const finalUsername = username.iLike ?? mergedAndFilters.username?.iLike ?? null;
+    const finalFullname = fullname.iLike ?? mergedAndFilters.fullname?.iLike ?? null;
+
+    // Sorting
     const { field, direction } = sorting[0] ?? {};
-    const sortingOpts = {
+    const sortFieldMap = {
       userId: 'mu.id',
       email: 'mu.email',
       username: 'mu.username',
@@ -58,99 +69,105 @@ export class UserService extends TypeOrmQueryService<UserEntity> {
       createdAt: 'mu.created_at',
       updatedAt: 'mu.updated_at',
     };
-    const order = sortingOpts[field];
+    const orderByField = sortFieldMap[field] ?? 'mu.updated_at';
+    const orderDirection = (direction ?? 'DESC') as 'ASC' | 'DESC';
 
     const trRepo = this.manager.getRepository(UserEntity);
-
-    const where: Record<string, string> = {
-      ...(email ? { ['mu.email']: email } : {}),
-      ...(username ? { ['mu.username']: username } : {}),
-      ...(fullname ? { ['mup.fullname']: fullname } : {}),
-    };
-
-    // const whereString = Object.keys(where)
-    //   .map((key) => `${key} ilike ${key}`)
-    //   .join(' AND ');
 
     try {
       const queryBuilder = trRepo
         .createQueryBuilder('mu')
         .leftJoin('m_user_profile', 'mup', 'mup.user_id = mu.id')
-        .where(
-          Object.keys(where).reduce(
-            (prev, key, i) =>
-              prev +
-              (!!i ? ' AND ' : '') +
-              `${key} ILIKE :${key.split('.')[1]}`,
-            '',
-          ),
-          Object.keys(where).reduce(
-            (prev, key) => ({ ...prev, [key.split('.')[1]]: where[key] }),
-            {},
-          ),
-        )
-        .andWhere(`mup.id is not null`);
+        .andWhere(`mup.id IS NOT NULL`);
 
-      const dt = await queryBuilder
+      // Apply AND filters
+      if (finalEmail) queryBuilder.andWhere('mu.email ILIKE :email', { email: finalEmail });
+      if (finalUsername) queryBuilder.andWhere('mu.username ILIKE :username', { username: finalUsername });
+      if (finalFullname) queryBuilder.andWhere('mup.fullname ILIKE :fullname', { fullname: finalFullname });
+
+      // Apply OR filters
+      if (or.length > 0) {
+        queryBuilder.andWhere(new Brackets((qb) => {
+          or.forEach((orFilter, index) => {
+            const orConditions: string[] = [];
+            const orParams: Record<string, any> = {};
+
+            if (orFilter.email?.iLike) {
+              orConditions.push(`mu.email ILIKE :orEmail${index}`);
+              orParams[`orEmail${index}`] = orFilter.email.iLike;
+            }
+            if (orFilter.username?.iLike) {
+              orConditions.push(`mu.username ILIKE :orUsername${index}`);
+              orParams[`orUsername${index}`] = orFilter.username.iLike;
+            }
+            if (orFilter.fullname?.iLike) {
+              orConditions.push(`mup.fullname ILIKE :orFullname${index}`);
+              orParams[`orFullname${index}`] = orFilter.fullname.iLike;
+            }
+
+            if (orConditions.length > 0) {
+              qb.orWhere(orConditions.join(' OR '), orParams);
+            }
+          });
+        }));
+      }
+
+      // Build data query with pagination and sorting
+      const dataQuery = queryBuilder
         .clone()
-        .select('mup.id', 'id')
-        .addSelect('mu.email', 'email')
-        .addSelect('mu.username', 'username')
-        .addSelect('mup.fullname', 'fullname')
-        .addSelect('mup.user_id', 'user_id')
-        .addSelect('mup.phone', 'phone')
-        .addSelect('mup.address', 'address')
-        .addSelect('mu.updated_at', 'updateAt')
-        .addSelect('mu.created_at', 'createdAt')
-        // .limit(limit)
-        // .offset(offset ?? 0)
-        .orderBy(
-          order ?? 'mu.updated_at',
-          (direction ?? 'DESC') as 'ASC' | 'DESC',
-        )
-        .execute();
-      console.log('dt', dt);
+        .select([
+          'mup.id AS id',
+          'mu.email AS email',
+          'mu.username AS username',
+          'mup.fullname AS fullname',
+          'mup.user_id AS user_id',
+          'mup.phone AS phone',
+          'mup.address AS address',
+          'mu.updated_at AS updatedAt',
+          'mu.created_at AS createdAt',
+        ])
+        .limit(limit)
+        .offset(offset)
+        .orderBy(orderByField, orderDirection);
+
+      const dataRows = await dataQuery.execute();
+
+      // Total count query
       const qry = queryBuilder.clone().select('mu.id', 'id').getQuery();
       const prm = queryBuilder.clone().select('mu.id', 'id').getParameters();
 
-      const totalCount = Number(
-        (
-          await this.manager
-            .createQueryBuilder()
-            .from(`(${setQueryWithParams(qry, prm)})`, 'a')
-            .select('SUM(1)', 'CNT')
-            .execute()
-        )[0]?.CNT ?? 0,
-      );
+      const totalCountResult = await this.manager
+        .createQueryBuilder()
+        .from(`(${setQueryWithParams(qry, prm)})`, 'a')
+        .select('COUNT(*)', 'CNT')
+        .execute();
 
-      // const hasNextPage = offset + limit < totalCount;
-      // const hasPreviousPage = !!offset;
+      const totalCount = Number(totalCountResult?.[0]?.CNT ?? 0);
+      const hasNextPage = offset + limit < totalCount;
+      const hasPreviousPage = offset > 0;
 
-      const nodes: userDetailDTO[] = [];
-
-      for await (const data of dt) {
-        nodes.push({
-          id: data.id,
-          email: data.email ?? '-',
-          username: data.username ?? '-',
-          user_id: data.user_id ?? '-',
-          fullname: data.fullname ?? '-',
-          phone: data.phone ?? '-',
-          created_at: data.createdAt ?? '-',
-          address: data.address ?? '-',
-        });
-      }
+      const nodes: userDetailDTO[] = dataRows.map((data) => ({
+        id: data.id,
+        email: data.email ?? '-',
+        username: data.username ?? '-',
+        user_id: data.user_id ?? '-',
+        fullname: data.fullname ?? '-',
+        phone: data.phone ?? '-',
+        address: data.address ?? '-',
+        created_at: data.createdAt ?? '-',
+      }));
 
       return {
         nodes,
-        // pageInfo: {
-        //   hasNextPage,
-        //   hasPreviousPage,
-        // },
         totalCount,
+        pageInfo: {
+          hasNextPage,
+          hasPreviousPage,
+        },
       };
     } catch (err) {
       throw new Error(err.message);
     }
   }
+
 }

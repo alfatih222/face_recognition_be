@@ -11,6 +11,7 @@ import { MSettingEntity } from '../m_setting/m_setting.entity';
 import { PdfResponse } from './pdf.response';
 import { PdfEntity } from './pdf.entity';
 import * as moment from 'moment';
+import * as path from 'path';
 
 @Injectable()
 export class PdfService {
@@ -21,18 +22,26 @@ export class PdfService {
         const queryRunner = datasource.createQueryRunner();
         await queryRunner.startTransaction();
         const dates = moment().format('DDMMYY');
-
+        const date = moment().locale('id').format('DD-MMMM-YYYY');
         const prefixSource = './public/uploads/';
         const folderPath = 'pdf/absensi';
         const templatePath = `templates/pdf`;
         const pdfPath = `${folderPath}/rekapAbsen_${dates}.pdf`;
-
         try {
             const pdfd = queryRunner.manager.getRepository(PdfEntity);
             const repo = queryRunner.manager.getRepository(AttendanceEntity);
-            const data = await repo.find({
-                relations: ['user', 'user.profile'],
-            });
+            const startOfMonth = moment().startOf('month').toDate();
+            const endOfMonth = moment().endOf('month').toDate();
+
+            const data = await repo
+                .createQueryBuilder('attendance')
+                .leftJoinAndSelect('attendance.user', 'user')
+                .leftJoinAndSelect('user.profile', 'profile')
+                .where('attendance.date BETWEEN :start AND :end', {
+                    start: startOfMonth,
+                    end: endOfMonth,
+                })
+                .getMany();
             const settingRepo = queryRunner.manager.getRepository(MSettingEntity);
             const setting = await settingRepo.findOne({
                 where: { isActive: true },
@@ -42,6 +51,9 @@ export class PdfService {
                 return either.error(new Error({ message: 'Data absensi tidak ditemukan' }));
             }
 
+            const logoPath1 = path.resolve(__dirname, `../../../../public/uploads/sekolah/logo/${setting.logoSekolah}`);
+            const logoBuffer = fs.readFileSync(logoPath1);
+            const logoBase64 = `data:image/png;base64,${logoBuffer.toString('base64')}`;
             const formattedData = data.map((absen) => ({
                 ...absen,
                 tanggalFormatted: moment(absen.date).locale('id').format('D MMMM YYYY'),
@@ -50,26 +62,27 @@ export class PdfService {
             const css = fs.readFileSync(`${templatePath}/style.css`, 'utf8');
             const htmlTemplate = fs.readFileSync(`${templatePath}/template.html`, 'utf8');
 
-            const headerContent = fs.readFileSync(`${templatePath}/header.html`, 'utf8')
-                .replace('{{title}}', 'Laporan Absensi Guru')
-                .replace('{{periode}}', setting.periode ?? '-')
-                .replace('{{nama_sekolah}}', setting.namaSekolah ?? '-');
-
-            const footerContent = fs.readFileSync(`${templatePath}/footer.html`, 'utf8')
-                .replace('{{generatedAt}}', new Date().toLocaleString());
-
             const opts = {
                 format: 'A4',
-                orientation: 'portrait',
-                header: { height: '40mm', contents: headerContent },
-                footer: { height: '20mm', contents: footerContent },
+                border: {
+                    top: '0',
+                    right: '5mm',
+                    bottom: '20mm',
+                    left: '5mm'
+                },
+                orientation: 'portrait'
             };
 
             const doc = {
                 html: htmlTemplate.replace('/* CSS */', css),
                 data: {
                     absensi: formattedData,
-                    sekolah: setting,
+                    sekolah: {
+                        ...setting,
+                        logo: logoBase64,
+                        title: 'Laporan Absensi Guru',
+                        date: date
+                    },
                 },
                 path: prefixSource + pdfPath,
                 type: '',

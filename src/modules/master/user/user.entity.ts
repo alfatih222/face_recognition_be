@@ -39,7 +39,7 @@ export class UserEntity extends BaseEntity {
   @Column({
     nullable: true,
   })
-  file: string;
+  face: string;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user)
   profile: ProfileEntity;
