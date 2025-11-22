@@ -3,7 +3,7 @@ import { UserEntity } from "@/src/modules/master/user/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 
 
-@Entity({ name: "absensi" })
+@Entity({ name: "presensi" })
 export class AttendanceEntity extends BaseEntity {
     @ManyToOne(() => UserEntity, (user) => user.id, { nullable: true })
     @JoinColumn({ name: 'user_id' })
@@ -23,12 +23,12 @@ export class AttendanceEntity extends BaseEntity {
     @Column({nullable:true})
     checkOut: string;
 
-    @Column()
+    @Column({nullable:true})
     latitude: string;
  
-    @Column()
+    @Column({nullable:true})
     longitude: string;
 
-    @Column()
+    @Column({nullable:true})
     type: string;
 }

@@ -67,7 +67,7 @@ export class ProfileDto {
       (a, b) => {
         const src = a.source.profile_photo;
         console.log('sasasa', src)
-        return src ? pathToUrl(`profile/${src}`) : null;
+        return src ? pathToUrl(`uploads/profile/${src}`) : null;
       },
     ],
     nullable: true,

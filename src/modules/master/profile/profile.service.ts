@@ -67,7 +67,7 @@ export class ProfileService {
                     this.i18n,
                 );
                 photos = {
-                    profilePhoto: profilePhotoUploaded.filename,
+                    profile_photo: profilePhotoUploaded.filename,
                 };
             }
 

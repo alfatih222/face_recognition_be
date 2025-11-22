@@ -49,7 +49,7 @@ export class AuthService {
     }
 
     if (!file) {
-      const errorMessage = await this.i18n.t('auth.USER_ALREADY_TAKEN', {
+      const errorMessage = await this.i18n.t('validation.FACE', {
         args: { email: input.email },
       });
 

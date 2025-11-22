@@ -19,11 +19,11 @@
   "SOME_ARE_NOT_LISTED": "beberapa {property} tidak terdaftar",
   "SIGN_SUCCESS": "Berhasil Memperbaharui Signature",
   "USER": "face tidak di temukan",
-  "FACE": "Face tidak sesuai",
-  "ABSEN_SUCCESS": "Absensi Berhasil",
-  "LOCATION": "Anda tidak berada dalam lokasi yang di tentukan untuk melakukan absensi",
+  "FACE": "Face tidak boleh kosong",
+  "ABSEN_SUCCESS": "Presensi Berhasil",
+  "LOCATION": "Anda tidak berada dalam lokasi yang di tentukan untuk melakukan Presensi",
   "ATTENDANCE_TIME_INVALID": "Anda sudah tidak bisa melakukan abseni",
   "ALREADY_ATTEND_TODAY": "Anda sudah melakukan absen hari ini",
-  "NO_CHECKIN_FOUND": "Anda sudah tidak bisa melakukan absensi",
+  "NO_CHECKIN_FOUND": "Anda sudah tidak bisa melakukan Presensi",
   "FACE_NOT_MATCH": "Wajah anda tidak sesuai"
 }

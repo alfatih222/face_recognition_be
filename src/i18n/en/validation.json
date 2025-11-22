@@ -18,7 +18,7 @@
   "SOME_ARE_NOT_LISTED": "some {property} are not exist or has been inactivated",
   "SIGN_SUCCESS": "Success Update Signature",
   "USER": "face tidak di temukan",
-  "FACE": "Face tidak sesuai",
+  "FACE": "face is empty",
   "ABSEN_SUCCESS": "Absensi Berhasil",
   "LOCATION": "Anda tidak berada dalam lokasi yang di tentukan untuk melakukan absensi",
   "ATTENDANCE_TIME_INVALID": "Anda sudah tidak bisa melakukan absen",

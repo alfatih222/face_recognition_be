@@ -39,12 +39,10 @@ export class AttendanceService extends TypeOrmQueryService<AttendanceEntity> imp
   async createAttendance(input: any, user: UserEntity): Promise<AttendanceResponse> {
     const { file, latitude, longitude } = input;
     const setting = await this.entityManager.getRepository(MSettingEntity).findOne({ where: { isActive: true } });
-    console.log('okkkkkk')
     if (!setting) {
       throw new Error('Setting absensi aktif tidak ditemukan.');
     }
     const attendanceType = getAttendanceTypeByTime(setting);
-    console.log('attendanceType', attendanceType)
     if (attendanceType === 'Invalid') {
       return new AttendanceResponse({
         allow: false,
@@ -65,12 +63,12 @@ export class AttendanceService extends TypeOrmQueryService<AttendanceEntity> imp
       relations: ['user'],
     });
 
-    // if (attendanceType === 'Masuk' && exsist) {
-    //   return new AttendanceResponse({
-    //     allow: false,
-    //     message: await this.i18n.t('validation.ALREADY_ATTEND_TODAY'),
-    //   });
-    // }
+    if (attendanceType === 'Masuk' && exsist) {
+      return new AttendanceResponse({
+        allow: false,
+        message: await this.i18n.t('validation.ALREADY_ATTEND_TODAY'),
+      });
+    }
 
     if (attendanceType === 'Pulang' && !exsist) {
       return new AttendanceResponse({

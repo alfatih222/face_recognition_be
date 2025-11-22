@@ -27,6 +27,8 @@ import { PdfModule } from './modules/master/pdf/pdf.module';
 import { MenuModule } from './modules/master/menu/menu.module';
 import { RolePermissionModule } from './modules/master/role_permission/role_permission.module';
 import { ProfileModule } from './modules/master/profile/profile.module';
+import {ScheduleModule} from '@nestjs/schedule'
+import { CronModule } from './modules/cron/cron.module';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { ProfileModule } from './modules/master/profile/profile.module';
       },
       exclude: ['/graphql', '/sync'],
     }),
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       ignoreEnvFile: !!process.env.CI,
       envFilePath: join(__dirname, '..', '.env'),
@@ -112,7 +115,8 @@ import { ProfileModule } from './modules/master/profile/profile.module';
     PdfModule,
     MenuModule,
     RolePermissionModule,
-    ProfileModule
+    ProfileModule,
+    CronModule
   ],
   providers: [
     {
